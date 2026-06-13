@@ -469,16 +469,30 @@ function renderFlash(){
 function renderType(){
   replay=renderType;
   const pool=itemsFor(S.lesson); const items=shuffle(pool).slice(0,S.lesson==='all'?20:pool.length);
-  let i=0,score=0,combo=0,answered=false;
+  const total=items.length;
+  let queue=items.slice(), i=0, phase='main', wrong=[], firstScore=0, combo=0, answered=false;
   const norm=s=>(s||'').toLowerCase().replace(/[.?!,]+$/,'').replace(/\s+/g,' ').trim();
   const masked=ans=>ans.split(' ').map(w=>w[0]+(w.length>1?'_'.repeat(w.length-1):'')).join('  ');
-  function draw(){
-    const it=items[i], c=qa(it); answered=false;
+  function retryIntro(){
+    phase='retry'; queue=shuffle(wrong.slice()); i=0;
     app.innerHTML = `
-      ${hud('써보기 ⌨️','점수 '+score)}
-      <div class="progress"><div style="width:${(i/items.length)*100}%"></div></div>
-      <div class="combo">${combo>=2?('🔥 '+combo+' 연속!'):''}</div>
-      <div class="qcard"><div class="qtag">${S.category==='vocab'?'뜻을 보고 영어 단어를 쓰세요 ✍️':'뜻을 보고 영어 청크를 쓰세요 ✍️'}</div>
+      ${hud('써보기 ⌨️','🔁 재도전')}
+      <div class="qcard"><div style="font-size:48px">🔁</div>
+        <div class="qword" style="font-size:22px;margin-top:6px">아쉽게 틀린 단어 ${queue.length}개!</div>
+        <div class="qtag" style="margin-top:10px;font-size:13px">한 번 더 기회를 줄게요. 이번에 다 맞히면 통과예요!</div></div>
+      <button class="startbtn" id="retryGo">다시 도전 🔁</button>`;
+    bindBack();
+    document.getElementById('retryGo').onclick=()=>{ beep(true); draw(); };
+  }
+  function draw(){
+    const it=queue[i], c=qa(it); answered=false;
+    const counter = phase==='main' ? ((i+1)+' / '+total) : ('🔁 '+(i+1)+' / '+queue.length);
+    const tag = phase==='main' ? (S.category==='vocab'?'뜻을 보고 영어 단어를 쓰세요 ✍️':'뜻을 보고 영어 청크를 쓰세요 ✍️') : '🔁 틀린 단어 다시! 영어로 써보세요';
+    app.innerHTML = `
+      ${hud('써보기 ⌨️', counter)}
+      <div class="progress"><div style="width:${(i/queue.length)*100}%"></div></div>
+      <div class="combo">${phase==='main'&&combo>=2?('🔥 '+combo+' 연속!'):''}</div>
+      <div class="qcard"><div class="qtag">${tag}</div>
         <div class="qword" style="font-size:24px">${c.a}</div>
         <div id="hintLine" style="margin-top:14px;font-size:18px;letter-spacing:2px;color:#9bbcae;font-weight:800;display:none">${masked(c.q)}</div></div>
       <input id="typeIn" class="type-in" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" placeholder="여기에 영어로 입력">
@@ -487,24 +501,26 @@ function renderType(){
     bindBack();
     const input=document.getElementById('typeIn'); setTimeout(()=>{ try{input.focus();}catch(e){} },50);
     document.getElementById('hintBtn').onclick=()=>{ document.getElementById('hintLine').style.display='block'; };
-    const next=()=>{ if(i<items.length-1){i++;draw();} else fin(); };
+    const advance=()=>{ i++; if(i>=queue.length){ if(phase==='main'&&wrong.length>0) retryIntro(); else fin(); } else draw(); };
     const check=(ev)=>{
-      if(answered){ next(); return; }
+      if(answered){ advance(); return; }
       const val=norm(input.value); if(!val)return; answered=true;
       const ok=val===norm(c.q); const fb=document.getElementById('feedback');
-      if(ok){ score++; combo++; beep(true); if(ev) popEmoji(ev.clientX||200,ev.clientY||300,combo>=3?'🎉':'🎯'); fb.innerHTML='🎉 정답!'; fb.className='type-fb good'; }
-      else { combo=0; beep(false); fb.innerHTML='정답: <b>'+c.q+'</b>'; fb.className='type-fb bad'; }
+      if(ok){ beep(true); if(ev) popEmoji(ev.clientX||200,ev.clientY||300,'🎯'); fb.innerHTML='🎉 정답!'; fb.className='type-fb good';
+        if(phase==='main'){ firstScore++; combo++; } else { const idx=wrong.indexOf(it); if(idx>=0) wrong.splice(idx,1); } }
+      else { beep(false); combo=0; fb.innerHTML='정답: <b>'+c.q+'</b>'; fb.className='type-fb bad'; if(phase==='main') wrong.push(it); }
       input.disabled=true; document.getElementById('hintBtn').disabled=true;
-      document.getElementById('checkBtn').textContent=(i<items.length-1?'다음 ▶':'결과 보기');
+      const last=i>=queue.length-1;
+      document.getElementById('checkBtn').textContent = last ? (phase==='main'&&wrong.length>0?'재도전 ▶':'결과 보기') : '다음 ▶';
     };
     document.getElementById('checkBtn').onclick=check;
     input.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); check(); } });
   }
   async function fin(){
-    const perfect=score===items.length; let qi=null;
-    if(S.lesson!=='all'){ if(perfect){ const r=await markQuest(S.lesson,S.category,'type'); qi={quest:'써보기',ok:true,pass:r.newlyPassed}; } else qi={quest:'써보기',ok:false,note:'전부 정답일 때 통과돼요'}; }
-    const pct=score/items.length; const emoji=pct===1?'🏆':pct>=0.8?'🎉':pct>=0.5?'😊':'💪';
-    renderResult({score,total:items.length,mode:'type',emoji,noBest:true,questInfo:qi});
+    const finalWrong=wrong.length; const perfect=finalWrong===0; const score=total-finalWrong; let qi=null;
+    if(S.lesson!=='all'){ if(perfect){ const r=await markQuest(S.lesson,S.category,'type'); qi={quest:'써보기',ok:true,pass:r.newlyPassed}; } else qi={quest:'써보기',ok:false,note:'틀린 단어를 재도전에서도 다 맞히면 통과돼요'}; }
+    const emoji = perfect ? (firstScore===total?'🏆':'🎉') : '💪';
+    renderResult({score,total,mode:'type',emoji,noBest:true,questInfo:qi,custom:(perfect&&firstScore<total)?'🔁 재도전으로 통과!':''});
   }
   draw();
 }
@@ -512,19 +528,20 @@ function renderType(){
 function renderMatch(){
   replay=renderMatch;
   const picked=shuffle(itemsFor(S.lesson)).slice(0,6);
-  const left=shuffle(picked.map((it,idx)=>({id:idx,t:qa(it).q})));
-  const right=shuffle(picked.map((it,idx)=>({id:idx,t:qa(it).a})));
+  const left=shuffle(picked.map(it=>({q:qa(it).q, a:qa(it).a})));
+  const right=shuffle(picked.map(it=>({a:qa(it).a})));
   let sel=null,matched=0,mistakes=0,t0=Date.now();
   app.innerHTML=`${hud('짝 맞추기 🧩','0 / 6')}<div class="match-grid" id="grid"></div>`;
   bindBack();
   const grid=document.getElementById('grid');
-  grid.innerHTML=left.map((x,k)=>`<div class="mcard" data-side="L" data-id="${x.id}">${x.t}</div><div class="mcard" data-side="R" data-id="${right[k].id}">${right[k].t}</div>`).join('');
+  grid.innerHTML=left.map((x,k)=>`<div class="mcard" data-side="L" data-ans="${encodeURIComponent(x.a)}">${x.q}</div><div class="mcard" data-side="R" data-val="${encodeURIComponent(right[k].a)}">${right[k].a}</div>`).join('');
   grid.onclick=(e)=>{
     const card=e.target.closest('.mcard'); if(!card||card.classList.contains('done'))return;
     if(!sel){ sel=card; card.classList.add('sel'); return; }
     if(sel===card){ card.classList.remove('sel'); sel=null; return; }
     if(sel.dataset.side===card.dataset.side){ sel.classList.remove('sel'); sel=card; card.classList.add('sel'); return; }
-    if(sel.dataset.id===card.dataset.id){ sel.classList.remove('sel'); sel.classList.add('done'); card.classList.add('done'); matched++; beep(true); popEmoji(e.clientX,e.clientY,'🔗'); document.querySelectorAll('.meta')[1].textContent=matched+' / 6'; sel=null; if(matched===6) fin(); }
+    const L=sel.dataset.side==='L'?sel:card, R=sel.dataset.side==='L'?card:sel;
+    if(decodeURIComponent(L.dataset.ans)===decodeURIComponent(R.dataset.val)){ sel.classList.remove('sel'); sel.classList.add('done'); card.classList.add('done'); matched++; beep(true); popEmoji(e.clientX,e.clientY,'🔗'); document.querySelectorAll('.meta')[1].textContent=matched+' / 6'; sel=null; if(matched===6) fin(); }
     else { mistakes++; beep(false); const a=sel,b=card; a.classList.add('bad'); b.classList.add('bad'); setTimeout(()=>{a.classList.remove('bad','sel'); b.classList.remove('bad');},350); sel=null; }
   };
   async function fin(){

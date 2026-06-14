@@ -270,6 +270,19 @@ function beep(ok){
 }
 function popEmoji(x,y,e){ const s=document.createElement('div'); s.className='pop'; s.textContent=e; s.style.left=x+'px'; s.style.top=y+'px'; document.body.appendChild(s); setTimeout(()=>s.remove(),800); }
 function floatText(el,txt,cls){ if(!el)return; const r=el.getBoundingClientRect(); const s=document.createElement('div'); s.className='dmg '+(cls||''); s.textContent=txt; s.style.left=(r.left+r.width/2)+'px'; s.style.top=(r.top+18)+'px'; document.body.appendChild(s); setTimeout(()=>s.remove(),700); }
+let VOICES=[];
+function loadVoices(){ try{ VOICES=speechSynthesis.getVoices()||[]; }catch(e){} }
+if('speechSynthesis' in window){ loadVoices(); try{ speechSynthesis.onvoiceschanged=loadVoices; }catch(e){} }
+function speak(text){
+  try{
+    if(!('speechSynthesis' in window)||!text) return;
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; u.rate=0.9;
+    const v=VOICES.find(x=>/^en/i.test(x.lang)); if(v) u.voice=v;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
 
 /* ===== PASS / QUEST storage (localStorage = 이 기기에 영구 저장) ===== */
 const QUESTS = {};
@@ -448,10 +461,12 @@ function renderFlash(){
         <div class="face front"><span class="tag">${S.category==='vocab'?'WORD':'CHUNK'}</span><div class="big">${c.q}</div><div class="sub">탭하면 뜻이 보여요 👆</div></div>
         <div class="face back"><div class="big">${c.a}</div><div class="sub">Lesson ${it[0]}</div></div>
       </div></div>
+      <div style="text-align:center;margin:2px 0 12px"><button id="sayBtn" style="background:#fff;border:2px solid #d8eee3;border-radius:14px;padding:9px 18px;font-weight:800;color:#1c6b48;cursor:pointer;font-size:14px">🔊 발음 듣기</button></div>
       <div class="flash-ctrl"><button class="fbtn dunno" id="dunno">아직 몰라요</button><button class="fbtn know" id="know">외웠어요 ✓</button></div>
       <div class="nav"><button id="prev" ${i===0?'disabled':''}>◀ 이전</button><button id="next">${i===items.length-1?'결과 보기':'다음 ▶'}</button></div>`;
     bindBack();
     const fl=document.getElementById('flash'); fl.onclick=()=>{ flipped=!flipped; fl.classList.toggle('flipped',flipped); };
+    document.getElementById('sayBtn').onclick=()=>speak(c.q);
     document.getElementById('prev').onclick=()=>{ if(i>0){i--;draw();} };
     document.getElementById('next').onclick=()=>{ if(i<items.length-1){i++;draw();} else fin(); };
     document.getElementById('know').onclick=(e)=>{ known++; beep(true); popEmoji(e.clientX,e.clientY,'⭐'); adv(); };

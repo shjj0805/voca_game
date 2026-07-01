@@ -488,6 +488,8 @@ function renderType(){
   const total=items.length;
   let queue=items.slice(), i=0, phase='main', wrong=[], firstScore=0, combo=0, answered=false;
   const norm=s=>(s||'').toLowerCase().replace(/[.?!,]+$/,'').replace(/\s+/g,' ').trim();
+  const stripLead=s=>{ let t=s,m; while((m=/^(?:i|a|an|the|my|your|our|his|her|its|their)\s+/.exec(t))) t=t.slice(m[0].length); return t; };
+  const same=(a,b)=>a===b||(stripLead(a)===stripLead(b));
   const masked=ans=>ans.split(' ').map(w=>w[0]+(w.length>1?'_'.repeat(w.length-1):'')).join('  ');
   function retryIntro(){
     phase='retry'; queue=shuffle(wrong.slice()); i=0;
@@ -521,7 +523,7 @@ function renderType(){
     const check=(ev)=>{
       if(answered){ advance(); return; }
       const val=norm(input.value); if(!val)return; answered=true;
-      const ok=val===norm(c.q); const fb=document.getElementById('feedback');
+      const ok=same(val,norm(c.q)); const fb=document.getElementById('feedback');
       if(ok){ beep(true); if(ev) popEmoji(ev.clientX||200,ev.clientY||300,'🎯'); fb.innerHTML='🎉 정답!'; fb.className='type-fb good';
         if(phase==='main'){ firstScore++; combo++; } else { const idx=wrong.indexOf(it); if(idx>=0) wrong.splice(idx,1); } }
       else { beep(false); combo=0; fb.innerHTML='정답: <b>'+c.q+'</b>'; fb.className='type-fb bad'; if(phase==='main') wrong.push(it); }

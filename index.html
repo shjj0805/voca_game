@@ -475,7 +475,7 @@ function renderHome(){
   const battleLocked = sel!=='all' && !threeDone;
   const battleDone = q && q.battle;
   app.innerHTML = `
-    <div class="topbar"><div class="logo">🌱 Honey의 Sprout 단어게임 <small>Sprout1 B2</small></div></div>
+    <div class="topbar"><div class="logo">🌱 Honey의 Sprout 단어게임 <small>Sprout1 B2 · v10</small></div></div>
     <div style="margin:-4px 0 10px"><a href="b1.html" style="display:inline-block;background:rgba(255,255,255,.9);border-radius:12px;padding:8px 14px;font-weight:800;font-size:13px;color:#0d3a2a;text-decoration:none">← 지난 달 단어(B1)</a></div>
     <div class="card-panel">
       <div class="passrow"><span>${S.category==='vocab'?'📘 단어':'🔗 청크'} · 통과한 레슨</span><b>${passCount} / ${lessons.length}</b></div>

@@ -475,7 +475,7 @@ function renderHome(){
   const battleLocked = sel!=='all' && !threeDone;
   const battleDone = q && q.battle;
   app.innerHTML = `
-    <div class="topbar"><div class="logo">🌱 Honey의 Sprout 단어게임 <small>Sprout1 B2 · v10</small></div></div>
+    <div class="topbar"><div class="logo">🌱 Honey의 Sprout 단어게임 <small>Sprout1 B2 · v11</small></div></div>
     <div style="margin:-4px 0 10px"><a href="b1.html" style="display:inline-block;background:rgba(255,255,255,.9);border-radius:12px;padding:8px 14px;font-weight:800;font-size:13px;color:#0d3a2a;text-decoration:none">← 지난 달 단어(B1)</a></div>
     <div class="card-panel">
       <div class="passrow"><span>${S.category==='vocab'?'📘 단어':'🔗 청크'} · 통과한 레슨</span><b>${passCount} / ${lessons.length}</b></div>
@@ -529,46 +529,47 @@ function renderReset(){
 function renderBattleIntro(){
   replay=renderBattleIntro;
   const enemy=ENEMIES[Math.random()*ENEMIES.length|0];
-  function tipFor(h){ const mp=matchup(h.el,enemy.el); return mp.cls==='good'?'상성 유리 💥':mp.cls==='bad'?'상성 불리 🛡️':'보통'; }
   app.innerHTML = `
     ${hud('단어 배틀 ⚔️','')}
     <div class="card-panel" style="text-align:center">
       <h2>용사를 골라줘! 🛡️</h2>
-      <div style="margin:6px 0 2px;font-weight:800;color:#2a6b53">상대 보스: ${enemy.emo} ${enemy.name} <span style="font-size:12px">(${ELEMOJI[enemy.el]}${enemy.el})</span></div>
+      <div style="margin:6px 0 2px;font-weight:800;color:#2a6b53">상대 보스: ${enemy.emo} ${enemy.name}</div>
       <div class="hero-pick" id="heroPick">
-        ${HEROES.map((h,i)=>`<div class="hero-card ${chosenHero===h?'sel':''}" data-i="${i}"><div class="hemo">${h.emo}</div><div class="hname">${h.name}</div><div style="font-size:10px;font-weight:800;color:#c0541f">${h.tier}급 ${ELEMOJI[h.el]}</div></div>`).join('')}
+        ${HEROES.map((h,i)=>`<div class="hero-card ${chosenHero===h?'sel':''}" data-i="${i}"><div class="hemo">${h.emo}</div><div class="hname">${h.name}</div><div style="font-size:10px;font-weight:800;color:#c0541f">${h.tier}급</div></div>`).join('')}
       </div>
-      <div id="matchTip" style="margin:8px 0;font-weight:800;font-size:13px;color:#1c6b48"></div>
-      <div class="hint">티어가 높을수록(S&gt;D) 데미지가 커요. 용사 속성이 보스에게 <b>상성 유리</b>면 체력을 더 많이 깎고, 불리하면 덜 깎여요. 문제마다 영어↔한글 방향이 바뀝니다!</div>
+      <div class="hint">카드에 나오는 단어가 모두 문제로 나와요. 문제마다 영어↔한글 방향이 섞여 나옵니다. 하트 5개를 잃기 전에 모두 맞히면 승리! 🏆</div>
       <button class="battlebtn" id="goBattle">배틀 시작 ⚔️</button>
     </div>`;
   bindBack();
-  const updTip=()=>{ const t=document.getElementById('matchTip'); if(t) t.innerHTML=`${chosenHero.emo} ${chosenHero.name} (${chosenHero.tier}급 ${ELEMOJI[chosenHero.el]}${chosenHero.el}) → ${tipFor(chosenHero)}`; };
-  document.getElementById('heroPick').onclick=e=>{const c=e.target.closest('.hero-card'); if(!c)return; chosenHero=HEROES[+c.dataset.i]; document.querySelectorAll('.hero-card').forEach(x=>x.classList.remove('sel')); c.classList.add('sel'); updTip();};
-  updTip();
+  document.getElementById('heroPick').onclick=e=>{const c=e.target.closest('.hero-card'); if(!c)return; chosenHero=HEROES[+c.dataset.i]; document.querySelectorAll('.hero-card').forEach(x=>x.classList.remove('sel')); c.classList.add('sel');};
   document.getElementById('goBattle').onclick=()=>{ beep(true); renderBattle(chosenHero,enemy); };
 }
 function renderBattle(hero,enemy){
-  const pool=itemsFor(S.lesson); const MAXHP=100;
+  const pool=itemsFor(S.lesson);
   const mp=matchup(hero.el, enemy.el);
-  let queue=shuffle(pool), qi=0, enemyHP=MAXHP, hearts=5, combo=0, busy=false, curCorrect=null;
-  function nextItem(){ if(qi>=queue.length){ queue=shuffle(pool); qi=0; } return queue[qi++]; }
-  let current=nextItem();
+  // 상성/등급이 나쁠수록 한↔영 반대 방향 문제를 더 많이 추가한다 (화면엔 표시 안 함)
+  const matchupLevel = mp.cls==='good' ? -1 : mp.cls==='bad' ? 1 : 0;
+  const tierLevel = {S:-2,A:-1,B:0,C:1,D:2}[hero.tier];
+  const hc = Math.max(0, Math.min(4, matchupLevel + tierLevel));
+  const nExtra = Math.round(pool.length * (hc/4));
+  const base = shuffle(pool).map(it=>({it,rev:false}));                  // 카드 단어 전부: 영어→뜻
+  const extra = shuffle(pool).slice(0,nExtra).map(it=>({it,rev:true}));  // 불리할수록 한↔영 반대 추가
+  const queue = shuffle(base.concat(extra));
+  const total = queue.length;
+  let correctCount=0, hearts=5, combo=0, busy=false, curCorrect=null;
   function draw(){
-    const c=qa(current);
-    const rev=Math.random()<0.5;                                   // true면 한글 보고 영어 고르기
+    const cur=queue[0], c=qa(cur.it), rev=cur.rev;
     const promptText = rev ? c.a : c.q;
     curCorrect = rev ? c.q : c.a;
-    const field = rev ? (it=>qa(it).q) : (it=>qa(it).a);
+    const field = rev ? (x=>qa(x).q) : (x=>qa(x).a);
     const opts=shuffle([curCorrect,...shuffle([...new Set(pool.map(field))].filter(x=>x!==curCorrect)).slice(0,3)]);
     const qtag = rev ? '🔄 뜻을 보고 영어를 골라 공격!' : (S.category==='vocab'?'영어 단어의 뜻을 골라 공격!':'청크의 뜻을 골라 공격!');
-    const matchBadge = mp.cls==='good'?' <span style="color:#ffe08a">유리 💥</span>':mp.cls==='bad'?' <span style="color:#ffd0d0">불리 🛡️</span>':'';
     app.innerHTML = `
       ${hud('단어 배틀 ⚔️', combo>=2?('🔥 x'+combo):'')}
       <div class="arena">
-        <div class="fighter enemy" id="enemyF"><div class="fname">${enemy.name} ${ELEMOJI[enemy.el]}</div><div class="emo">${enemy.emo}</div><div class="hpbar"><div id="enemyHP" style="width:${enemyHP/MAXHP*100}%"></div></div></div>
-        <div class="vs">⚔️ VS ⚔️${matchBadge}</div>
-        <div class="fighter hero" id="heroF"><div class="emo">${hero.emo}</div><div class="fname">${hero.name} <span style="font-size:11px;color:#c0541f">${hero.tier}급 ${ELEMOJI[hero.el]}</span></div><div class="hearts" id="hearts">${'❤️'.repeat(hearts)}${'🤍'.repeat(5-hearts)}</div></div>
+        <div class="fighter enemy" id="enemyF"><div class="fname">${enemy.name}</div><div class="emo">${enemy.emo}</div><div class="hpbar"><div id="enemyHP" style="width:${(total-correctCount)/total*100}%"></div></div></div>
+        <div class="vs">⚔️ VS ⚔️</div>
+        <div class="fighter hero" id="heroF"><div class="emo">${hero.emo}</div><div class="fname">${hero.name} <span style="font-size:11px;color:#c0541f">${hero.tier}급</span></div><div class="hearts" id="hearts">${'❤️'.repeat(hearts)}${'🤍'.repeat(5-hearts)}</div></div>
       </div>
       <div class="qcard battle-q"><div class="qtag">${qtag}</div><div class="qword">${promptText}</div></div>
       <div class="opts" id="opts">${opts.map(o=>`<button class="opt" data-a="${encodeURIComponent(o)}">${o}</button>`).join('')}</div>`;
@@ -581,17 +582,17 @@ function renderBattle(hero,enemy){
     document.querySelectorAll('.opt').forEach(el=>{const a=decodeURIComponent(el.dataset.a); if(a===curCorrect)el.classList.add('correct'); else if(el===b&&!ok)el.classList.add('wrong'); else el.classList.add('dim');});
     const enemyF=document.getElementById('enemyF'), heroF=document.getElementById('heroF');
     if(ok){
-      combo++; const dmg=Math.max(1,Math.round((TIERDMG[hero.tier]+Math.min(combo-1,5)*4)*mp.mult)); enemyHP=Math.max(0,enemyHP-dmg); beep(true);
+      combo++; correctCount++; queue.shift(); beep(true);
       heroF.classList.add('attack-up'); setTimeout(()=>heroF.classList.remove('attack-up'),300);
       enemyF.classList.add('hit'); setTimeout(()=>enemyF.classList.remove('hit'),300);
-      floatText(enemyF,'-'+dmg,''); const bar=document.getElementById('enemyHP'); if(bar) bar.style.width=(enemyHP/MAXHP*100)+'%';
-      setTimeout(()=>{ if(enemyHP<=0) win(); else { current=nextItem(); busy=false; draw(); } },720);
+      const bar=document.getElementById('enemyHP'); if(bar) bar.style.width=((total-correctCount)/total*100)+'%';
+      setTimeout(()=>{ if(queue.length===0) win(); else { busy=false; draw(); } },600);
     } else {
-      combo=0; hearts--; beep(false);
+      combo=0; hearts--; queue.push(queue.shift()); beep(false);   // 틀리면 뒤로 보내 다시 출제
       enemyF.classList.add('attack-down'); setTimeout(()=>enemyF.classList.remove('attack-down'),300);
       heroF.classList.add('hit'); setTimeout(()=>heroF.classList.remove('hit'),300);
       floatText(heroF,'💥',''); const hh=Math.max(hearts,0); const h=document.getElementById('hearts'); if(h) h.textContent='❤️'.repeat(hh)+'🤍'.repeat(5-hh);
-      setTimeout(()=>{ if(hearts<=0) lose(); else { current=nextItem(); busy=false; draw(); } },950);
+      setTimeout(()=>{ if(hearts<=0) lose(); else { busy=false; draw(); } },850);
     }
   }
   async function win(){

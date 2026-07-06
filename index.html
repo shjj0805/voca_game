@@ -67,14 +67,15 @@
   .hearts { font-size:18px; margin-top:4px; letter-spacing:2px; }
   .vs { text-align:center; font-weight:900; color:#fff; font-size:13px; opacity:.9; }
   .hero-pick { display:flex; gap:8px; justify-content:center; margin:12px 0; flex-wrap:wrap; }
-  .hero-card { width:22%; min-width:64px; background:#fff; border:2px solid #d8eee3; border-radius:16px; padding:10px 4px; cursor:pointer; text-align:center; }
+  .hero-card { position:relative; width:22%; min-width:64px; background:#fff; border:2px solid #d8eee3; border-radius:16px; padding:10px 4px; cursor:pointer; text-align:center; }
   .hero-card.sel { border-color:#1fae73; background:#eafaf2; transform:translateY(-2px); }
   .hero-card .hemo { font-size:34px; } .hero-card .hname { font-size:11px; font-weight:800; color:#1c5e42; margin-top:4px; }
-  .hero-card .hemo img { transition:transform .15s; will-change:transform; }
+  .hero-card .hemo img { transition:transform .15s; will-change:transform; transform-origin:center bottom; }
   .hero-card.sel .hemo img { animation: heroIdle 1.6s ease-in-out infinite; }
   @keyframes heroIdle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
-  .hero-card.pick .hemo img { animation: heroPop .5s ease; }
-  @keyframes heroPop { 0%{transform:scale(1) rotate(0)} 22%{transform:scale(1.3) rotate(-8deg)} 48%{transform:scale(.9) rotate(6deg)} 72%{transform:scale(1.1) rotate(-3deg)} 100%{transform:scale(1) rotate(0)} }
+  .hero-card.pick { z-index:20; }
+  .hero-card.pick .hemo img { animation: heroPop .6s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes heroPop { 0%{transform:scale(1) translateY(0)} 38%{transform:scale(2.2) translateY(-18px)} 72%{transform:scale(1.12) translateY(0)} 100%{transform:scale(1) translateY(0)} }
   .dmg { position:fixed; transform:translateX(-50%); font-weight:900; font-size:28px; pointer-events:none; animation:dmgfloat .7s ease-out forwards; z-index:60; color:#ff2d2d; text-shadow:0 2px 0 #fff,0 0 8px #fff; }
   @keyframes dmgfloat { 0%{opacity:1;transform:translate(-50%,0) scale(.7)} 100%{opacity:0;transform:translate(-50%,-54px) scale(1.4)} }
   .flash-wrap { perspective:1200px; margin:6px 0 16px; }
@@ -552,7 +553,6 @@ function renderBattleIntro(){
     c.classList.add('pick');
     c.addEventListener('animationend', function h(){ c.classList.remove('pick'); c.removeEventListener('animationend',h); });
     beep(true);
-    popEmoji(e.clientX, e.clientY, '⭐');
   };
   document.getElementById('goBattle').onclick=()=>{ beep(true); renderBattle(chosenHero,enemy); };
 }

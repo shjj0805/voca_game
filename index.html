@@ -70,6 +70,11 @@
   .hero-card { width:22%; min-width:64px; background:#fff; border:2px solid #d8eee3; border-radius:16px; padding:10px 4px; cursor:pointer; text-align:center; }
   .hero-card.sel { border-color:#1fae73; background:#eafaf2; transform:translateY(-2px); }
   .hero-card .hemo { font-size:34px; } .hero-card .hname { font-size:11px; font-weight:800; color:#1c5e42; margin-top:4px; }
+  .hero-card .hemo img { transition:transform .15s; will-change:transform; }
+  .hero-card.sel .hemo img { animation: heroIdle 1.6s ease-in-out infinite; }
+  @keyframes heroIdle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+  .hero-card.pick .hemo img { animation: heroPop .5s ease; }
+  @keyframes heroPop { 0%{transform:scale(1) rotate(0)} 22%{transform:scale(1.3) rotate(-8deg)} 48%{transform:scale(.9) rotate(6deg)} 72%{transform:scale(1.1) rotate(-3deg)} 100%{transform:scale(1) rotate(0)} }
   .dmg { position:fixed; transform:translateX(-50%); font-weight:900; font-size:28px; pointer-events:none; animation:dmgfloat .7s ease-out forwards; z-index:60; color:#ff2d2d; text-shadow:0 2px 0 #fff,0 0 8px #fff; }
   @keyframes dmgfloat { 0%{opacity:1;transform:translate(-50%,0) scale(.7)} 100%{opacity:0;transform:translate(-50%,-54px) scale(1.4)} }
   .flash-wrap { perspective:1200px; margin:6px 0 16px; }
@@ -538,7 +543,17 @@ function renderBattleIntro(){
       <button class="battlebtn" id="goBattle">배틀 시작 ⚔️</button>
     </div>`;
   bindBack();
-  document.getElementById('heroPick').onclick=e=>{const c=e.target.closest('.hero-card'); if(!c)return; chosenHero=HEROES[+c.dataset.i]; document.querySelectorAll('.hero-card').forEach(x=>x.classList.remove('sel')); c.classList.add('sel');};
+  document.getElementById('heroPick').onclick=e=>{
+    const c=e.target.closest('.hero-card'); if(!c)return;
+    chosenHero=HEROES[+c.dataset.i];
+    document.querySelectorAll('.hero-card').forEach(x=>{ x.classList.remove('sel'); x.classList.remove('pick'); });
+    c.classList.add('sel');
+    void c.offsetWidth;                       // 리플로우로 애니메이션 재시작
+    c.classList.add('pick');
+    c.addEventListener('animationend', function h(){ c.classList.remove('pick'); c.removeEventListener('animationend',h); });
+    beep(true);
+    popEmoji(e.clientX, e.clientY, '⭐');
+  };
   document.getElementById('goBattle').onclick=()=>{ beep(true); renderBattle(chosenHero,enemy); };
 }
 function renderBattle(hero,enemy){

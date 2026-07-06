@@ -379,9 +379,6 @@ const HEROES = [
   {emo:'🐂',name:'Bull',tier:'C',el:'바위'},
   {emo:'🏹',name:'Bo',tier:'C',el:'풀'},
   {emo:'🐻',name:'Nita',tier:'C',el:'바위'},
-  {emo:'🤠',name:'Colt',tier:'D',el:'전기'},
-  {emo:'🍸',name:'Barley',tier:'D',el:'물'},
-  {emo:'💣',name:'Dynamike',tier:'D',el:'불'},
 ];
 const ENEMIES = [
   {emo:'👹',name:'도깨비 대왕',el:'불'},
@@ -475,7 +472,7 @@ function renderHome(){
   const battleLocked = sel!=='all' && !threeDone;
   const battleDone = q && q.battle;
   app.innerHTML = `
-    <div class="topbar"><div class="logo">🌱 Honey의 Sprout 단어게임 <small>Sprout1 B2 · v11</small></div></div>
+    <div class="topbar"><div class="logo">🌱 Honey의 Sprout 단어게임 <small>Sprout1 B2</small></div></div>
     <div style="margin:-4px 0 10px"><a href="b1.html" style="display:inline-block;background:rgba(255,255,255,.9);border-radius:12px;padding:8px 14px;font-weight:800;font-size:13px;color:#0d3a2a;text-decoration:none">← 지난 달 단어(B1)</a></div>
     <div class="card-panel">
       <div class="passrow"><span>${S.category==='vocab'?'📘 단어':'🔗 청크'} · 통과한 레슨</span><b>${passCount} / ${lessons.length}</b></div>
@@ -535,9 +532,9 @@ function renderBattleIntro(){
       <h2>용사를 골라줘! 🛡️</h2>
       <div style="margin:6px 0 2px;font-weight:800;color:#2a6b53">상대 보스: ${enemy.emo} ${enemy.name}</div>
       <div class="hero-pick" id="heroPick">
-        ${HEROES.map((h,i)=>`<div class="hero-card ${chosenHero===h?'sel':''}" data-i="${i}"><div class="hemo">${h.emo}</div><div class="hname">${h.name}</div><div style="font-size:10px;font-weight:800;color:#c0541f">${h.tier}급</div></div>`).join('')}
+        ${HEROES.map((h,i)=>`<div class="hero-card ${chosenHero===h?'sel':''}" data-i="${i}"><div class="hemo">${h.emo}</div><div class="hname">${h.name}</div></div>`).join('')}
       </div>
-      <div class="hint">카드에 나오는 단어가 모두 문제로 나와요. 문제마다 영어↔한글 방향이 섞여 나옵니다. 하트 5개를 잃기 전에 모두 맞히면 승리! 🏆</div>
+      <div class="hint">하트 5개를 잃기 전에 모두 맞히면 승리! 🏆</div>
       <button class="battlebtn" id="goBattle">배틀 시작 ⚔️</button>
     </div>`;
   bindBack();
@@ -569,7 +566,7 @@ function renderBattle(hero,enemy){
       <div class="arena">
         <div class="fighter enemy" id="enemyF"><div class="fname">${enemy.name}</div><div class="emo">${enemy.emo}</div><div class="hpbar"><div id="enemyHP" style="width:${(total-correctCount)/total*100}%"></div></div></div>
         <div class="vs">⚔️ VS ⚔️</div>
-        <div class="fighter hero" id="heroF"><div class="emo">${hero.emo}</div><div class="fname">${hero.name} <span style="font-size:11px;color:#c0541f">${hero.tier}급</span></div><div class="hearts" id="hearts">${'❤️'.repeat(hearts)}${'🤍'.repeat(5-hearts)}</div></div>
+        <div class="fighter hero" id="heroF"><div class="emo">${hero.emo}</div><div class="fname">${hero.name}</div><div class="hearts" id="hearts">${'❤️'.repeat(hearts)}${'🤍'.repeat(5-hearts)}</div></div>
       </div>
       <div class="qcard battle-q"><div class="qtag">${qtag}</div><div class="qword">${promptText}</div></div>
       <div class="opts" id="opts">${opts.map(o=>`<button class="opt" data-a="${encodeURIComponent(o)}">${o}</button>`).join('')}</div>`;

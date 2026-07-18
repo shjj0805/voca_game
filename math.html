@@ -73,32 +73,34 @@
   .jhead{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
   .jhead .jtitle{ color:#fff; font-weight:900; font-size:19px; text-shadow:0 2px 0 rgba(43,35,80,.35); }
   .jhead .jprog{ color:#fff; font-weight:800; font-size:14px; background:rgba(255,255,255,.2); padding:5px 10px; border-radius:99px; }
-  .trailwrap{ border-radius:24px; padding:6px 0 20px; box-shadow:inset 0 -30px 50px rgba(0,0,0,.12); }
+  .trailwrap{ border-radius:22px; overflow:hidden; box-shadow:0 8px 0 rgba(0,0,0,.18), inset 0 0 0 4px rgba(255,255,255,.15); }
+  .scene{ position:relative; width:100%; }
+  .scene>svg.bg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .pin{ position:absolute; transform:translate(-50%,-50%); border:none; background:none; cursor:pointer; padding:0; z-index:2; }
+  .pin.locked{ cursor:default; }
+  .disc{ position:relative; width:62px; height:62px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 38% 30%, #eef1f4, #b3b9c1 58%, #868d96);
+    border:3px solid #6b727b; box-shadow: inset 0 -6px 9px rgba(0,0,0,.35), inset 0 4px 7px rgba(255,255,255,.65), 0 6px 9px rgba(0,0,0,.4); }
+  .disc .qm{ font-size:32px; font-weight:900; color:#565b63; text-shadow:0 2px 0 rgba(255,255,255,.55); }
+  .disc svg{ width:52px; height:52px; }
+  .plaque{ position:absolute; bottom:-13px; left:50%; transform:translateX(-50%); background:#5a3d24; color:#ffedcf; font-weight:900; font-size:13px; line-height:1; padding:4px 9px; border-radius:8px; border:2px solid #3a2614; box-shadow:0 3px 0 rgba(0,0,0,.3); min-width:22px; text-align:center; }
+  .pin.done .disc{ background:radial-gradient(circle at 38% 30%, #ffffff, #e4ebef 58%, #c2cad0); border-color:#9aa2ab; }
+  .pin.current .disc{ box-shadow:0 0 0 5px var(--sun), inset 0 -6px 9px rgba(0,0,0,.35), 0 6px 12px rgba(0,0,0,.45); animation:bob 1.4s ease-in-out infinite; }
+  .pin .flag{ position:absolute; bottom:64px; left:50%; transform:translateX(-50%); background:var(--coral); color:#fff; font-weight:900; font-size:12px; padding:3px 10px; border-radius:99px; white-space:nowrap; box-shadow:0 3px 0 rgba(0,0,0,.25); animation:bob 1.4s ease-in-out infinite; }
+  .pin .flag::after{ content:""; position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--coral); }
+  .pin .chk{ position:absolute; right:-6px; top:-6px; width:24px; height:24px; background:var(--mint); color:#fff; border-radius:50%; font-weight:900; font-size:14px; line-height:24px; text-align:center; box-shadow:0 2px 0 rgba(0,0,0,.2); z-index:3; }
+  .pin.boss .disc{ width:82px; height:82px; border-color:#c79a20; box-shadow:0 0 0 4px #ffd23f, inset 0 -7px 11px rgba(0,0,0,.35), 0 7px 11px rgba(0,0,0,.45); }
+  .pin.boss .disc svg{ width:66px; height:66px; }
+  .pin.boss .disc .qm{ font-size:38px; }
+  .pin.boss.current .disc{ animation:bob 1.3s ease-in-out infinite; }
+  .pin.boss .plaque{ background:#7a5210; border-color:#4a3208; color:#fff3cf; }
+
+  /* BATTLE */
   .t-forest{ background:linear-gradient(180deg,#bff08a,#6bb04a); }
   .t-sea{ background:linear-gradient(180deg,#a6dcff,#4f9fd8); }
   .t-volcano{ background:linear-gradient(180deg,#ffcf9a,#e88250); }
   .t-star{ background:linear-gradient(180deg,#c9b6ff,#7f5fd0); }
   .t-rainbow{ background:linear-gradient(180deg,#fff0f8,#dcc6ff); }
-  .trail{ position:relative; padding:14px 0; }
-  .trail::before{ content:''; position:absolute; left:50%; top:0; bottom:0; width:5px; margin-left:-2.5px; background:repeating-linear-gradient(rgba(255,255,255,.7) 0 11px, transparent 11px 22px); border-radius:3px; }
-  .stop{ position:relative; display:flex; justify-content:center; min-height:104px; align-items:center; }
-  .stop.left .node{ transform:translateX(-72px); }
-  .stop.right .node{ transform:translateX(72px); }
-  .node{ width:82px; height:82px; border-radius:50%; border:none; cursor:pointer; position:relative; z-index:1; background:rgba(255,255,255,.95); box-shadow:0 6px 0 rgba(0,0,0,.18); display:flex; align-items:center; justify-content:center; }
-  .node svg{ width:64px; height:64px; }
-  .stop.locked .node{ background:rgba(255,255,255,.38); box-shadow:0 6px 0 rgba(0,0,0,.10); cursor:default; }
-  .stop.locked .qmark{ font-size:30px; font-weight:900; color:rgba(255,255,255,.95); }
-  .stop.done .node{ background:#fff; }
-  .stop.done .check{ position:absolute; right:-4px; top:-4px; width:26px; height:26px; background:var(--mint); color:#fff; border-radius:50%; font-weight:900; font-size:15px; line-height:26px; text-align:center; box-shadow:0 2px 0 rgba(0,0,0,.15); }
-  .stop.current .node{ animation:bob 1.4s ease-in-out infinite; box-shadow:0 0 0 5px var(--sun),0 8px 0 rgba(0,0,0,.2); }
-  .stop.current .flag{ position:absolute; top:-16px; background:var(--coral); color:#fff; font-weight:900; font-size:12px; padding:3px 9px; border-radius:99px; white-space:nowrap; box-shadow:0 3px 0 rgba(0,0,0,.15); animation:bob 1.4s ease-in-out infinite; }
-  .node.boss{ width:100px; height:100px; }
-  .node.boss svg{ width:80px; height:80px; }
-  .stop.boss .node{ box-shadow:0 0 0 5px var(--sun),0 8px 0 rgba(0,0,0,.25); }
-  .stop.boss.locked .node{ box-shadow:0 0 0 4px rgba(255,210,63,.5),0 6px 0 rgba(0,0,0,.1); }
-  .crown-tag{ position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:24px; }
-
-  /* BATTLE */
   #battle{ gap:8px; }
   .btop{ display:flex; align-items:center; gap:10px; min-height:44px; }
   .timerbar{ flex:1; height:16px; border-radius:99px; background:rgba(255,255,255,.35); overflow:hidden; box-shadow:inset 0 2px 4px rgba(0,0,0,.18); position:relative; }
@@ -400,28 +402,98 @@ function renderMap(){
 /* ================= JOURNEY ================= */
 let curRegion=null;
 function openJourney(rid){ curRegion=rid; typeBag=[]; renderJourney(); show('journey'); }
+
+/* ---------- scene helpers ---------- */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function hashStr(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const THEME={
+  forest:{ground:['#8ecb52','#5aa63f','#3c7d30'], path:['#e6c483','#c39a55']},
+  sea:{ground:['#9bd6f7','#4f9fd8','#2c68a8'], path:['#ecd9a6','#cbb06f']},
+  volcano:{ground:['#8a5238','#5a3226','#331a14'], path:['#d6a45e','#a9793f']},
+  star:{ground:['#40376f','#241f52','#14102e'], path:['#8f81e0','#6154b0']},
+  rainbow:{ground:['#ffe6f4','#ecd6ff','#d6e6ff'], path:['#ffd98f','#e6b45c']},
+};
+function sceneGeom(n){
+  const W=1000, margin=175, gap=205, H=Math.round(margin*2+(n-1)*gap);
+  const midX=500, amp=300, swings=clamp(n/4,3,6);
+  const pt=t=>({ x:midX+amp*Math.sin(t*swings*Math.PI+0.6), y:H-margin-t*(H-2*margin) });
+  return {W,H,margin,pt};
+}
+function pine(x,y,s,c){ return `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(${s.toFixed(2)})"><rect x="-5" y="8" width="10" height="16" rx="3" fill="#6b4a2a"/><polygon points="0,-34 -24,6 24,6" fill="${c[0]}"/><polygon points="0,-20 -21,18 21,18" fill="${c[1]}"/><polygon points="0,-6 -18,30 18,30" fill="${c[0]}"/></g>`; }
+function bush(x,y,s,c){ return `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(${s.toFixed(2)})"><ellipse cx="0" cy="4" rx="30" ry="22" fill="${c[1]}"/><ellipse cx="-13" cy="-3" rx="18" ry="15" fill="${c[0]}"/><ellipse cx="12" cy="-1" rx="16" ry="14" fill="${c[0]}"/></g>`; }
+function rock(x,y,s,c){ return `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(${s.toFixed(2)})"><path d="M-26,14 L-18,-10 L4,-16 L22,-4 L26,14 Z" fill="${c[1]}"/><path d="M-18,-10 L4,-16 L10,-2 L-6,2 Z" fill="${c[0]}"/></g>`; }
+function star4(x,y,s,c){ return `<path transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(${s.toFixed(2)})" d="M0,-8 L2,-2 L8,0 L2,2 L0,8 L-2,2 L-8,0 L-2,-2 Z" fill="${c}"/>`; }
+function dot(x,y,r,c){ return `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${r}" fill="${c}"/>`; }
+function bridge(x,y,ang){ return `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) rotate(${ang.toFixed(0)})"><rect x="-42" y="-22" width="84" height="6" rx="3" fill="#8a5e34"/><rect x="-40" y="-18" width="80" height="36" rx="5" fill="#b07f45" stroke="#7a5227" stroke-width="3"/><g stroke="#8a5e34" stroke-width="3">${[-28,-14,0,14,28].map(px=>`<line x1="${px}" y1="-18" x2="${px}" y2="18"/>`).join('')}</g><rect x="-42" y="16" width="84" height="6" rx="3" fill="#8a5e34"/></g>`; }
+function woodSign(x,y,label,w){ w=w||140; return `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)})"><rect x="${-w/2+8}" y="30" width="11" height="52" fill="#6b4a2a"/><rect x="${w/2-19}" y="30" width="11" height="52" fill="#6b4a2a"/><rect x="${-w/2}" y="-4" width="${w}" height="46" rx="8" fill="#8a5e34" stroke="#5a3d22" stroke-width="4"/><rect x="${-w/2+5}" y="1" width="${w-10}" height="6" rx="3" fill="#a3703f"/><text x="0" y="30" font-size="26" font-weight="900" fill="#ffedcf" text-anchor="middle" font-family="sans-serif">${label}</text></g>`; }
+function caveGoal(x,y){ return `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)})"><ellipse cx="0" cy="-6" rx="122" ry="98" fill="#615647"/><ellipse cx="0" cy="-6" rx="104" ry="82" fill="#4a4034"/><path d="M-70,42 Q-70,-72 0,-72 Q70,-72 70,42 Z" fill="#241f18"/><rect x="-30" y="-66" width="60" height="108" fill="#7fd4ef" opacity=".85"/><g stroke="#cdeeff" stroke-width="4" opacity=".8">${[-20,-6,8,22].map(px=>`<line x1="${px}" y1="-66" x2="${px}" y2="42"/>`).join('')}</g><ellipse cx="0" cy="46" rx="58" ry="12" fill="#8fdcf2" opacity=".7"/><g transform="translate(86 -38)"><rect x="-3" y="0" width="6" height="34" fill="#5a3d22"/><circle cx="0" cy="-4" r="10" fill="#ffb43c"/><circle cx="0" cy="-6" r="5" fill="#fff1a8"/></g></g>`; }
+function goalMarker(rid,x,y){
+  let e='';
+  if(rid==='forest') e=caveGoal(x,y-6);
+  else if(rid==='sea') e=`<g transform="translate(${x} ${y-24})"><rect x="-16" y="-64" width="32" height="92" rx="6" fill="#f4f4f4" stroke="#cfcfcf" stroke-width="3"/><rect x="-16" y="-34" width="32" height="16" fill="#ff5a5a"/><rect x="-16" y="2" width="32" height="16" fill="#ff5a5a"/><polygon points="0,-88 -22,-60 22,-60" fill="#ffce4a"/><circle cx="0" cy="-68" r="8" fill="#fff6c0"/></g>`;
+  else if(rid==='volcano') e=`<g transform="translate(${x} ${y})"><polygon points="-92,44 0,-92 92,44" fill="#5a3226"/><polygon points="-30,-30 0,-92 30,-30" fill="#ff5a2a"/><ellipse cx="0" cy="-74" rx="34" ry="12" fill="#ffb03c"/><circle cx="-40" cy="-40" r="4" fill="#ffd23f"/><circle cx="34" cy="-30" r="3" fill="#ffd23f"/></g>`;
+  else if(rid==='star') e=`<g transform="translate(${x} ${y})"><circle r="72" fill="none" stroke="#ffe36b" stroke-width="10" opacity=".85"/><circle r="52" fill="#3a2f7a" opacity=".7"/>${star4(0,0,3,'#fff2b0')}</g>`;
+  else e=`<g transform="translate(${x} ${y+6})">${['#ff6b6b','#ffb04a','#ffe14a','#5ad06a','#5c9cff','#b06bff'].map((c,i)=>`<path d="M-118,44 A128,128 0 0 1 118,44" fill="none" stroke="${c}" stroke-width="11" transform="translate(0 ${i*13})"/>`).join('')}</g>`;
+  return e+woodSign(x,y+72,'GOAL',128);
+}
+function scatter(rng,g,count,fn){ let s=''; for(let i=0;i<count;i++) s+=fn(rng()*g.W, rng()*g.H, rng()); return s; }
+function decorBack(rid,rng,g){
+  if(rid==='forest') return scatter(rng,g,Math.round(g.H/58),(x,y,r)=> r<0.55? pine(x,y,0.7+r*0.9, r<0.28?['#357e2c','#2a5f24']:['#66b84f','#4f9c3f']) : bush(x,y,0.8+r*0.4, r<0.8?['#5aa845','#3f8a34']:['#7cc65c','#5aa845']))
+    + scatter(rng,g,Math.round(g.H/240),(x,y,r)=>`<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)})"><circle r="3.4" fill="${['#ffd23f','#ff8fb0','#fff'][Math.floor(r*3)%3]}"/><circle r="1.4" fill="#ffcf3f"/></g>`);
+  if(rid==='sea') return scatter(rng,g,Math.round(g.H/80),(x,y,r)=> r<0.5? rock(x,y,0.7+r,['#8aa0b0','#63788a']) : `<path transform="translate(${x.toFixed(0)} ${y.toFixed(0)})" d="M-14,0 q14,-9 28,0" stroke="#eafaff" stroke-width="3" fill="none" opacity=".7"/>`);
+  if(rid==='volcano') return scatter(rng,g,Math.round(g.H/70),(x,y,r)=> r<0.6? rock(x,y,0.8+r,['#6a4030','#3f241b']) : `<line x1="${x.toFixed(0)}" y1="${y.toFixed(0)}" x2="${(x+14).toFixed(0)}" y2="${(y+18).toFixed(0)}" stroke="#ff5a2a" stroke-width="3" opacity=".7"/>`) + scatter(rng,g,Math.round(g.H/200),(x,y,r)=>dot(x,y,2,'#ffb03c'));
+  if(rid==='star') return scatter(rng,g,Math.round(g.H/26),(x,y,r)=>star4(x,y,0.5+r*1.1, r<0.3?'#ffe36b':'#ffffff')) + scatter(rng,g,Math.round(g.H/500),(x,y,r)=>`<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(12+r*16).toFixed(0)}" fill="${['#7a8cf0','#f06ca8','#5fd6d0'][Math.floor(r*3)%3]}" opacity=".55"/>`);
+  return scatter(rng,g,Math.round(g.H/90),(x,y,r)=>`<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)})"><ellipse cx="0" cy="0" rx="${(20+r*16).toFixed(0)}" ry="${(12+r*8).toFixed(0)}" fill="#ffffff" opacity=".7"/></g>`) + scatter(rng,g,Math.round(g.H/60),(x,y,r)=>star4(x,y,0.4+r*0.7,['#ff8fb0','#ffe14a','#8fd4f0'][Math.floor(r*3)%3]));
+}
+function decorFront(rid,rng,g){
+  let s='';
+  const edgePine=(side)=>{ for(let i=0;i<Math.round(g.H/300);i++){ const y=rng()*g.H, x= side<0? 18+rng()*80 : g.W-18-rng()*80; s+= (rid==='forest')? pine(x,y,1.1+rng()*0.5,['#2f7028','#24551f']) : (rid==='sea'||rid==='volcano')? rock(x,y,1.2+rng()*0.6, rid==='sea'?['#7a8ea0','#556777']:['#5a3226','#331a14']) : ''; } };
+  edgePine(-1); edgePine(1);
+  if(rid==='forest'){ [0.34,0.68].forEach(t=>{ const a=g.pt(t), b=g.pt(t+0.008), ang=Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI; s+=bridge(a.x,a.y,ang); }); s+=`<path d="M-10,${(g.H*0.18).toFixed(0)} q90,50 40,130 q-60,100 40,180" stroke="#5cc8f0" stroke-width="22" fill="none" opacity=".8" stroke-linecap="round"/>`; }
+  if(rid==='sea'){ [0.4,0.72].forEach(t=>{ const a=g.pt(t), b=g.pt(t+0.008), ang=Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI; s+=bridge(a.x,a.y,ang); }); }
+  return s;
+}
+function buildScene(rid,list,p){
+  const n=list.length, g=sceneGeom(n), th=THEME[rid], rng=mulberry32(hashStr(rid));
+  const tA=0.03,tB=0.97, pts=[];
+  for(let i=0;i<n;i++) pts.push(g.pt(tA+(tB-tA)*(n>1?i/(n-1):0)));
+  let d=''; const K=Math.max(70,n*8);
+  for(let k=0;k<=K;k++){ const q=g.pt(k/K); d+=(k?'L':'M')+q.x.toFixed(1)+' '+q.y.toFixed(1)+' '; }
+  let svg=`<svg class="bg" viewBox="0 0 ${g.W} ${g.H}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">`;
+  svg+=`<defs><linearGradient id="grd_${rid}" x1="0" y1="0" x2="0" y2="1">`+th.ground.map((c,i)=>`<stop offset="${(i/(th.ground.length-1)).toFixed(2)}" stop-color="${c}"/>`).join('')+`</linearGradient></defs>`;
+  svg+=`<rect width="${g.W}" height="${g.H}" fill="url(#grd_${rid})"/>`;
+  svg+=decorBack(rid,rng,g);
+  svg+=`<path d="${d}" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="54" stroke-linecap="round" stroke-linejoin="round"/>`;
+  svg+=`<path d="${d}" fill="none" stroke="${th.path[1]}" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>`;
+  svg+=`<path d="${d}" fill="none" stroke="${th.path[0]}" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>`;
+  svg+=`<path d="${d}" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="7" stroke-linecap="round" stroke-dasharray="1 30"/>`;
+  svg+=decorFront(rid,rng,g);
+  svg+=woodSign(clamp(pts[0].x,150,850), pts[0].y+92, 'START', 148);
+  svg+=goalMarker(rid, clamp(pts[n-1].x,150,850), pts[n-1].y-118);
+  svg+=`</svg>`;
+  let pins='';
+  list.forEach((sp,i)=>{
+    const status=i<p?'done':(i===p?'current':'locked'), P=pts[i];
+    const L=(P.x/g.W*100).toFixed(2), T=(P.y/g.H*100).toFixed(2);
+    const disc = status==='done' ? monsterSVG(sp) : `<span class="qm">${sp.boss?'👑':'?'}</span>`;
+    pins+=`<button class="pin ${status}${sp.boss?' boss':''}" data-i="${i}" style="left:${L}%;top:${T}%">`
+      +(status==='current'?`<div class="flag">${sp.boss?'보스!':'여기!'}</div>`:'')
+      +`<div class="disc">${disc}</div><div class="plaque">${sp.boss?'★':(i+1)}</div>`
+      +(status==='done'?`<div class="chk">✓</div>`:'')+`</button>`;
+  });
+  return `<div class="scene" style="aspect-ratio:${g.W}/${g.H}">${svg}${pins}</div>`;
+}
 function renderJourney(){
   const r=REGIONS.find(x=>x.id===curRegion), list=speciesOf(curRegion), p=prog(curRegion);
   const got=list.filter(s=>state.caught[s.id]).length;
   $('jTitle').textContent=`${r.emoji} ${r.name}`;
   $('jProg').textContent=`${got} / ${list.length} 마리`;
-  $('trailwrap').className='trailwrap '+r.trail;
-  const trail=$('trail'); trail.innerHTML='';
-  list.forEach((sp,i)=>{
-    const status = i<p?'done':(i===p?'current':'locked');
-    const side = i%2===0?'left':'right';
-    const stop=document.createElement('div');
-    stop.className=`stop ${side} ${status}`+(sp.boss?' boss':'');
-    let inner='';
-    if(status==='locked') inner=`<div class="node${sp.boss?' boss':''}"><span class="qmark">${sp.boss?'👑':'?'}</span></div>`;
-    else inner=`<div class="node${sp.boss?' boss':''}">${monsterSVG(sp,{silhouette:status!=='done'&&false})}</div>`+(status==='done'?'<span class="check">✓</span>':'');
-    if(status==='current') inner=`<div class="flag">${sp.boss?'보스!':'여기!'}</div>`+inner;
-    if(sp.boss&&status!=='locked') inner=`<span class="crown-tag">👑</span>`+inner;
-    stop.innerHTML=inner;
-    if(status==='current'){ stop.onclick=()=>{ sndTap(); startEncounter(curRegion,i); }; stop.dataset.cur='1'; }
-    trail.appendChild(stop);
-  });
-  requestAnimationFrame(()=>{ const cur=trail.querySelector('[data-cur]'); if(cur)cur.scrollIntoView({block:'center'}); });
+  $('trailwrap').className='trailwrap';
+  const trail=$('trail'); trail.innerHTML=buildScene(curRegion,list,p);
+  const cur=trail.querySelector('.pin.current');
+  if(cur) cur.onclick=()=>{ sndTap(); startEncounter(curRegion, +cur.dataset.i); };
+  requestAnimationFrame(()=>{ if(cur) cur.scrollIntoView({block:'center'}); });
 }
 
 /* ================= BATTLE ================= */

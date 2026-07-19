@@ -610,7 +610,7 @@ window.addEventListener("DOMContentLoaded",()=>{
 
   document.getElementById("menuBtn").addEventListener("click",toggleMenu);
   document.getElementById("mResume").addEventListener("click",toggleMenu);
-  document.getElementById("mDex").addEventListener("click",()=>{renderDex();document.getElementById("dex").style.display="flex";});
+  document.getElementById("mDex").addEventListener("click",()=>{document.getElementById("menu").style.display="none";renderDex();document.getElementById("dex").style.display="flex";});
   document.getElementById("mHome").addEventListener("click",goHome);
   document.getElementById("mExit").addEventListener("click",goToMain);
   document.getElementById("mHelp").addEventListener("click",()=>{document.getElementById("menu").style.display="none";toast(state.isMobile?"조이스틱=이동 · 오른쪽 화면=시점 · 행동버튼=줍기/포획":"WASD=이동 · 마우스드래그=시점 · E/클릭=줍기/포획");});

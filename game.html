@@ -230,7 +230,7 @@ function box(w,h,d,color){return new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new
 function rand(a,b){return a+Math.random()*(b-a);}
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function totalBalls(){return state.balls.normal+state.balls.super+state.balls.hyper+state.balls.master;}
-function addCollider(mesh,pad=0){mesh.updateMatrixWorld();const b=new THREE.Box3().setFromObject(mesh);b.expandByScalar(pad);world.colliders.push(b);}
+function addCollider(mesh,pad=0){mesh.updateWorldMatrix(true,false);const b=new THREE.Box3().setFromObject(mesh);b.expandByScalar(pad);world.colliders.push(b);}
 function nearCollider(x,z,pad){const p=new THREE.Vector3(x,.5,z);for(const b of world.colliders){const bb=b.clone().expandByScalar(pad);if(p.x>bb.min.x&&p.x<bb.max.x&&p.z>bb.min.z&&p.z<bb.max.z)return true;}return false;}
 function collides(x,z){const r=.5;for(const b of world.colliders){if(x>b.min.x-r&&x<b.max.x+r&&z>b.min.z-r&&z<b.max.z+r)return true;}return Math.abs(x)>57||Math.abs(z)>57;}
 

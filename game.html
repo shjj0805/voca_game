@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PokéCraft Adventure</title>
+<style>
+  :root{
+    --panel:#2b2438; --panel-2:#3a3050; --ink:#f6f1e7; --gold:#ffcf4d;
+    --leaf:#4caf50; --ember:#ff7043; --aqua:#42a5f5;
+    --c-normal:#ef5350; --c-super:#42a5f5; --c-hyper:#ffca28; --c-master:#7e57c2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;overflow:hidden;background:#111;font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;color:var(--ink);}
+  #game{position:fixed;inset:0;}
+  canvas{display:block;}
+
+  .pxbtn{
+    font-family:inherit;font-weight:700;letter-spacing:.3px;color:var(--ink);
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:2px solid rgba(255,255,255,.15);border-bottom:4px solid rgba(0,0,0,.4);
+    border-radius:10px;padding:10px 16px;cursor:pointer;user-select:none;box-shadow:0 3px 0 rgba(0,0,0,.25);transition:transform .05s;
+  }
+  .pxbtn:active{transform:translateY(2px);border-bottom-width:2px;}
+
+  /* ---------- Title / Partner select ---------- */
+  #overlay{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:linear-gradient(180deg,#8fd3ff 0%,#bfe9ff 45%,#ffe6b3 100%);text-align:center;padding:24px;overflow:auto;}
+  #overlay h1{font-size:clamp(30px,7vw,64px);color:#fff;line-height:1.05;text-shadow:0 3px 0 #2b6cff,0 6px 12px rgba(0,0,0,.25);letter-spacing:1px;}
+  #overlay h1 span{color:var(--gold);text-shadow:0 3px 0 #b26a00,0 6px 12px rgba(0,0,0,.25);}
+  #overlay p.sub{margin-top:10px;color:#274b6d;font-weight:700;font-size:clamp(14px,2.6vw,18px);}
+  .stage{margin-top:12px;background:rgba(43,36,56,.82);border-radius:18px;padding:22px;max-width:760px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3);}
+  .stage h2{font-size:20px;margin-bottom:4px;}
+  .stage .hint{color:#c9c0da;font-size:13px;margin-bottom:16px;}
+  #resumeRow{display:none;flex-direction:column;gap:10px;align-items:center;margin-bottom:8px;}
+  #resumeBtn{font-size:20px;padding:14px 34px;background:linear-gradient(180deg,#8be08b,#43a047);color:#0c2b0c;border-color:#fff5;}
+  #newBtn{font-size:13px;background:transparent;border:none;color:#c9c0da;text-decoration:underline;cursor:pointer;font-family:inherit;}
+  .partners{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .pcard{width:190px;background:var(--panel-2);border:2px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;cursor:pointer;transition:transform .12s,border-color .12s,box-shadow .12s;}
+  .pcard:hover{transform:translateY(-4px);}
+  .pcard.sel{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,207,77,.35);}
+  .pcard .art{height:120px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
+  .pcard .pname{font-weight:800;margin-top:10px;font-size:17px;}
+  .pcard .ptype{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
+  .pcard .pdesc{font-size:12px;color:#c9c0da;margin-top:8px;line-height:1.4;}
+  .t-leaf{background:var(--leaf);} .t-ember{background:var(--ember);} .t-aqua{background:var(--aqua);}
+  #startBtn{margin-top:18px;font-size:18px;padding:12px 30px;opacity:.4;pointer-events:none;}
+  #startBtn.ready{opacity:1;pointer-events:auto;background:linear-gradient(180deg,#ffd766,#f5a623);color:#3a2600;border-color:#fff3;}
+
+  /* ---------- HUD ---------- */
+  #hud{position:fixed;inset:0;z-index:20;pointer-events:none;display:none;}
+  #bag{position:absolute;top:12px;left:12px;display:flex;gap:6px;flex-wrap:wrap;max-width:60vw;}
+  .bagItem{background:rgba(43,36,56,.8);border:2px solid rgba(255,255,255,.12);border-radius:10px;padding:5px 9px;font-weight:800;display:flex;align-items:center;gap:6px;font-size:13px;}
+  .bdot{width:15px;height:15px;border-radius:50%;border:2px solid #1a1a1a;display:inline-block;position:relative;}
+  .bdot::before{content:"";position:absolute;left:-2px;right:-2px;top:50%;height:2px;background:#1a1a1a;transform:translateY(-1px);}
+  #dexBadge{background:rgba(43,36,56,.8);border:2px solid rgba(255,255,255,.12);border-radius:10px;padding:5px 9px;font-weight:800;font-size:13px;}
+  #topRight{position:absolute;top:12px;right:12px;display:flex;gap:8px;pointer-events:auto;}
+  #topRight .pxbtn{padding:8px 12px;font-size:13px;}
+  #compass{position:absolute;top:58px;left:50%;transform:translateX(-50%);background:rgba(43,36,56,.7);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;letter-spacing:2px;}
+  #cross{position:absolute;left:50%;top:50%;width:8px;height:8px;border:2px solid rgba(255,255,255,.7);border-radius:50%;transform:translate(-50%,-50%);}
+  #prompt{position:absolute;left:50%;bottom:210px;transform:translateX(-50%);background:rgba(43,36,56,.9);border-radius:10px;padding:8px 16px;font-weight:800;font-size:14px;display:none;border:2px solid rgba(255,255,255,.2);text-align:center;}
+  #prompt b{color:var(--gold);}
+  #toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:rgba(20,16,28,.92);border:2px solid var(--gold);border-radius:12px;padding:10px 18px;font-weight:800;max-width:80%;text-align:center;opacity:0;transition:opacity .25s;font-size:15px;}
+  #toast.show{opacity:1;}
+
+  /* ---------- Pause menu ---------- */
+  #menu{position:fixed;inset:0;z-index:38;display:none;align-items:center;justify-content:center;background:rgba(8,6,14,.8);}
+  #menu .box{background:var(--panel);border-radius:16px;padding:24px;width:min(340px,90vw);text-align:center;border:2px solid rgba(255,255,255,.1);}
+  #menu h2{margin-bottom:16px;}
+  #menu .pxbtn{display:block;width:100%;margin:10px 0;font-size:16px;}
+
+  /* ---------- Capture ---------- */
+  #capture{position:fixed;inset:0;z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,rgba(60,40,90,.55),rgba(8,6,14,.92));padding:20px;text-align:center;}
+  #capName{font-weight:900;font-size:24px;margin-bottom:8px;text-shadow:0 2px 0 #000;}
+  #capTag{font-weight:800;font-size:14px;margin-bottom:14px;min-height:18px;}
+  #capMon{transition:transform .12s;}
+  #capBalls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+  .capBallBtn{min-width:96px;font-size:14px;padding:12px 14px;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .capBallBtn .bdot{width:22px;height:22px;}
+  .capBallBtn small{opacity:.85;font-weight:700;}
+  #capMsg{margin-top:16px;font-weight:800;min-height:24px;font-size:15px;}
+  #capRun{margin-top:12px;background:transparent;border:none;color:#c9c0da;text-decoration:underline;cursor:pointer;font-family:inherit;}
+
+  /* ---------- Dex ---------- */
+  #dex{position:fixed;inset:0;z-index:35;display:none;align-items:center;justify-content:center;background:rgba(8,6,14,.85);padding:20px;}
+  #dex .box{background:var(--panel);border-radius:16px;padding:20px;max-width:640px;width:100%;max-height:82vh;overflow:auto;border:2px solid rgba(255,255,255,.1);}
+  #dex h2{margin-bottom:4px;} #dex .sub{color:#c9c0da;font-size:13px;margin-bottom:14px;}
+  .dexgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;}
+  .dexcell{background:var(--panel-2);border-radius:12px;padding:12px;text-align:center;border:2px solid rgba(255,255,255,.06);}
+  .dexcell.empty{opacity:.35;}
+  .dexcell .swatch{width:100%;height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:32px;}
+  .dexcell .nm{font-weight:800;margin-top:8px;font-size:13px;} .dexcell .ct{font-size:11px;color:#c9c0da;}
+  #dexClose{margin-top:16px;}
+
+  /* ---------- Mobile ---------- */
+  #touch{position:fixed;inset:0;z-index:22;display:none;pointer-events:none;}
+  #joy{position:absolute;left:22px;bottom:22px;width:130px;height:130px;border-radius:50%;background:rgba(43,36,56,.4);border:2px solid rgba(255,255,255,.2);pointer-events:auto;touch-action:none;}
+  #joyNub{position:absolute;left:50%;top:50%;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.55);transform:translate(-50%,-50%);}
+  #look{position:absolute;right:0;top:100px;bottom:170px;left:170px;pointer-events:auto;touch-action:none;}
+  #actBtn{position:absolute;right:24px;bottom:40px;width:88px;height:88px;border-radius:50%;pointer-events:auto;background:linear-gradient(180deg,#ffd766,#f5a623);color:#3a2600;border:3px solid #fff6;font-weight:900;font-size:14px;box-shadow:0 4px 0 rgba(0,0,0,.35);}
+</style>
+</head>
+<body>
+<div id="game"></div>
+
+<!-- Title / Partner select -->
+<div id="overlay">
+  <h1>Poké<span>Craft</span><br>Adventure</h1>
+  <p class="sub">아침 햇살이 비치는 블록 세계에서 숨겨진 몬스터볼을 찾아 몬스터를 잡아라!</p>
+  <div class="stage">
+    <div id="resumeRow">
+      <button id="resumeBtn" class="pxbtn">▶ 이어하기</button>
+      <button id="newBtn">처음부터 새로 시작</button>
+    </div>
+    <div id="newGameArea">
+      <h2>파트너를 선택하세요</h2>
+      <div class="hint">가장 먼저 함께 모험을 떠날 친구를 골라주세요.</div>
+      <div class="partners" id="partners"></div>
+      <button id="startBtn" class="pxbtn">모험 시작 ▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- HUD -->
+<div id="hud">
+  <div id="bag"></div>
+  <div id="topRight">
+    <div id="dexBadge">📕 <span id="dexCount">0</span></div>
+    <button class="pxbtn" id="menuBtn">☰ 메뉴</button>
+  </div>
+  <div id="compass">N</div>
+  <div id="cross"></div>
+  <div id="prompt"></div>
+  <div id="toast"></div>
+</div>
+
+<!-- Pause menu -->
+<div id="menu">
+  <div class="box">
+    <h2>메뉴</h2>
+    <button class="pxbtn" id="mResume">계속하기</button>
+    <button class="pxbtn" id="mDex">📕 도감</button>
+    <button class="pxbtn" id="mHome">🏠 집으로 돌아가기</button>
+    <button class="pxbtn" id="mHelp">❔ 조작법</button>
+    <button class="pxbtn" id="mExit">🚪 메인으로 나가기</button>
+  </div>
+</div>
+
+<!-- Capture -->
+<div id="capture">
+  <div id="capName"></div>
+  <div id="capTag"></div>
+  <div id="capMon"></div>
+  <div id="capBalls"></div>
+  <div id="capMsg"></div>
+  <button id="capRun">도망가기</button>
+</div>
+
+<!-- Dex -->
+<div id="dex">
+  <div class="box">
+    <h2>몬스터 도감</h2>
+    <div class="sub">이 세계에서 만날 수 있는 몬스터들</div>
+    <div class="dexgrid" id="dexGrid"></div>
+    <button class="pxbtn" id="dexClose">닫기</button>
+  </div>
+</div>
+
+<!-- Mobile -->
+<div id="touch">
+  <div id="joy"><div id="joyNub"></div></div>
+  <div id="look"></div>
+  <button id="actBtn">행동</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+// ---------- Species ----------
+const SPECIES = {
+  leaf:  {name:"리플링", type:"풀",  color:0x4caf50, accent:0x2e7d32, emoji:"🌿", tclass:"t-leaf", desc:"이파리 꼬리를 흔드는 온순한 숲의 친구."},
+  ember: {name:"불꽃강아지", type:"불", color:0xff7043, accent:0xbf360c, emoji:"🔥", tclass:"t-ember", desc:"등에서 작은 불씨가 피어오르는 활발한 강아지."},
+  aqua:  {name:"물방울핀", type:"물", color:0x42a5f5, accent:0x1565c0, emoji:"💧", tclass:"t-aqua", desc:"물웅덩이를 좋아하는 반짝이는 지느러미 친구."},
+  spark: {name:"번쩍쥐", type:"전기", color:0xffd54f, accent:0xf9a825, emoji:"⚡", tclass:"t-ember", desc:"볼에 정전기를 모으는 재빠른 꼬마."},
+  rocky: {name:"돌덩이", type:"바위", color:0x9e9e9e, accent:0x616161, emoji:"🪨", tclass:"t-aqua", desc:"평지에 앉아 햇볕을 쬐는 느긋한 바위."},
+  puff:  {name:"솜뭉치", type:"노말", color:0xf8bbd0, accent:0xec407a, emoji:"☁️", tclass:"t-leaf", desc:"바람에 둥실 떠다니는 폭신한 솜뭉치."},
+  bug:   {name:"잎벌레", type:"벌레", color:0x9ccc65, accent:0x558b2f, emoji:"🐛", tclass:"t-leaf", desc:"풀숲을 조용히 기어다니는 작은 벌레."},
+  night: {name:"별그림자", type:"고스트", color:0x7e57c2, accent:0x4527a0, emoji:"🌙", tclass:"t-aqua", desc:"아침 그늘에 살짝 남아있는 신비로운 그림자."},
+  drake: {name:"용의알", type:"드래곤", color:0x26a69a, accent:0x00695c, emoji:"🐉", tclass:"t-aqua", desc:"아주 드물게 나타나는 강한 아기 용. 잡기 어렵다!"},
+};
+const WILD_POOL = ["leaf","ember","aqua","spark","rocky","puff","bug","night"];
+
+// ---------- Ball types ----------
+const BALLS = {
+  normal:{name:"몬스터볼", mult:1.0, color:"#ef5350", hex:0xef5350},
+  super: {name:"슈퍼볼",   mult:1.4, color:"#42a5f5", hex:0x42a5f5},
+  hyper: {name:"하이퍼볼", mult:1.9, color:"#ffca28", hex:0xffca28},
+  master:{name:"마스터볼", mult:99,  color:"#7e57c2", hex:0x7e57c2},
+};
+const BALL_ORDER=["normal","super","hyper","master"];
+
+const SAVE_KEY="pokecraft_save_v2";
+const HOME={x:0,z:4};
+
+let scene,camera,renderer,clock;
+let player=null,partner=null;
+const world={balls:[],monsters:[],colliders:[]};
+const state={
+  started:false, hasGame:false,
+  balls:{normal:0,super:0,hyper:0,master:0},
+  captured:{}, yaw:0, pitch:0.25, keys:{}, moveVec:{x:0,y:0},
+  nearBall:null, nearMon:null, inCapture:false, capMon:null,
+  ballTimer:16, saveTimer:5,
+  isMobile:/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)||('ontouchstart'in window&&window.innerWidth<900)
+};
+
+// ---------- helpers ----------
+function box(w,h,d,color){return new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color}));}
+function rand(a,b){return a+Math.random()*(b-a);}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function totalBalls(){return state.balls.normal+state.balls.super+state.balls.hyper+state.balls.master;}
+function addCollider(mesh,pad=0){mesh.updateMatrixWorld();const b=new THREE.Box3().setFromObject(mesh);b.expandByScalar(pad);world.colliders.push(b);}
+function nearCollider(x,z,pad){const p=new THREE.Vector3(x,.5,z);for(const b of world.colliders){const bb=b.clone().expandByScalar(pad);if(p.x>bb.min.x&&p.x<bb.max.x&&p.z>bb.min.z&&p.z<bb.max.z)return true;}return false;}
+function collides(x,z){const r=.5;for(const b of world.colliders){if(x>b.min.x-r&&x<b.max.x+r&&z>b.min.z-r&&z<b.max.z+r)return true;}return Math.abs(x)>57||Math.abs(z)>57;}
+
+// ---------- storage (safe) ----------
+function saveGame(){
+  if(!state.hasGame)return;
+  try{
+    const data={v:2,partner,captured:state.captured,balls:state.balls,
+      pos:player?{x:player.position.x,z:player.position.z}:HOME, yaw:state.yaw};
+    localStorage.setItem(SAVE_KEY,JSON.stringify(data));
+  }catch(e){/* preview sandbox may block storage */}
+}
+function loadSave(){ try{const s=localStorage.getItem(SAVE_KEY);return s?JSON.parse(s):null;}catch(e){return null;} }
+function clearSave(){ try{localStorage.removeItem(SAVE_KEY);}catch(e){} }
+
+// ---------- build monster ----------
+function buildMonster(key,strong){
+  const s=SPECIES[key];const g=new THREE.Group();
+  const bodyC=s.color,accC=s.accent;
+  const body=box(.9,.8,.7,bodyC);body.position.y=.7;g.add(body);
+  const head=box(.75,.7,.7,bodyC);head.position.set(0,1.35,.15);g.add(head);
+  const eyeMat=new THREE.MeshBasicMaterial({color:0x111111});
+  [-0.18,0.18].forEach(x=>{const e=new THREE.Mesh(new THREE.BoxGeometry(.12,.14,.06),eyeMat);e.position.set(x,1.42,.52);g.add(e);});
+  const cheek=box(.85,.2,.72,accC);cheek.position.y=.35;g.add(cheek);
+  [[-0.28,-0.28],[0.28,-0.28],[-0.28,0.25],[0.28,0.25]].forEach(([x,z])=>{const l=box(.22,.35,.22,accC);l.position.set(x,.17,z);g.add(l);});
+  if(key==="leaf"||key==="bug"){const leaf=box(.2,.5,.05,0x2e7d32);leaf.position.set(0,1.95,0);leaf.rotation.z=.3;g.add(leaf);}
+  if(key==="ember"||key==="spark"){const f=box(.3,.4,.3,0xffca28);f.position.set(0,1.9,-.2);g.add(f);}
+  if(key==="aqua"){const fin=box(.05,.4,.4,0x81d4fa);fin.position.set(0,1.9,-.1);g.add(fin);}
+  if(key==="night"){g.children.forEach(m=>{if(m.material){m.material.transparent=true;m.material.opacity=.75;}});}
+  if(key==="puff"){const p=box(1,1,1,bodyC);p.position.y=.9;g.add(p);}
+  if(key==="rocky"){head.position.y=1.15;}
+  if(key==="drake"){const wl=box(.05,.5,.6,accC);wl.position.set(-.55,1.1,-.1);wl.rotation.z=.4;g.add(wl);const wr=wl.clone();wr.position.x=.55;wr.rotation.z=-.4;g.add(wr);}
+  g.userData.species=key;
+  g.userData.strong=!!strong;
+  if(strong){
+    g.scale.set(1.4,1.4,1.4);
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(1.1,.08,8,28),new THREE.MeshBasicMaterial({color:0xffd54f}));
+    ring.rotation.x=Math.PI/2;ring.position.y=.1;g.add(ring);g.userData.aura=ring;
+  }
+  return g;
+}
+
+// ---------- build ball mesh ----------
+function buildBall(kind){
+  const g=new THREE.Group();
+  const top=new THREE.Mesh(new THREE.SphereGeometry(.35,14,7,0,Math.PI*2,0,Math.PI/2),new THREE.MeshLambertMaterial({color:BALLS[kind].hex}));
+  const bot=new THREE.Mesh(new THREE.SphereGeometry(.35,14,7,0,Math.PI*2,Math.PI/2,Math.PI/2),new THREE.MeshLambertMaterial({color:0xffffff}));
+  const band=new THREE.Mesh(new THREE.TorusGeometry(.35,.05,8,20),new THREE.MeshLambertMaterial({color:0x222222}));band.rotation.x=Math.PI/2;
+  const btn=new THREE.Mesh(new THREE.SphereGeometry(.1,8,8),new THREE.MeshLambertMaterial({color:0xffffff}));btn.position.z=.34;
+  g.add(top,bot,band,btn);
+  g.userData.kind=kind; g.userData.spin=rand(.5,1.5);
+  return g;
+}
+function randomBallKind(){const r=Math.random();if(r<.02)return"master";if(r<.10)return"hyper";if(r<.30)return"super";return"normal";}
+
+// ---------- world ----------
+function buildWorld(){
+  scene=new THREE.Scene();scene.background=new THREE.Color(0x9fd8ff);scene.fog=new THREE.Fog(0xcfeeff,40,120);
+  scene.add(new THREE.HemisphereLight(0xffffff,0x88aa66,.9));
+  const sun=new THREE.DirectionalLight(0xfff2cc,.9);sun.position.set(-30,40,20);scene.add(sun);
+  scene.add(new THREE.AmbientLight(0xfff4d6,.35));
+  const ground=new THREE.Mesh(new THREE.PlaneGeometry(120,120),new THREE.MeshLambertMaterial({color:0x6cbf3f}));
+  ground.rotation.x=-Math.PI/2;scene.add(ground);
+  const tuftGeo=new THREE.BoxGeometry(.5,.5,.5);
+  for(let i=0;i<160;i++){const t=new THREE.Mesh(tuftGeo,new THREE.MeshLambertMaterial({color:Math.random()<.5?0x5aa833:0x7fd24d}));t.position.set(rand(-55,55),.25,rand(-55,55));scene.add(t);}
+  buildHouse(new THREE.Vector3(0,0,10));
+  buildApartment(new THREE.Vector3(-22,0,-14),4);
+  buildApartment(new THREE.Vector3(18,0,-20),5);
+  buildApartment(new THREE.Vector3(-30,0,18),3);
+  for(let i=0;i<26;i++)buildTree(rand(-50,50),rand(-50,50));
+  for(let i=0;i<40;i++)buildTallGrass(rand(-52,52),rand(-52,52));
+  buildChest(new THREE.Vector3(3,0,7));buildChest(new THREE.Vector3(-20,0,-10));buildChest(new THREE.Vector3(20,0,-16));
+  const B=58;for(let x=-B;x<=B;x+=4){fencePost(x,-B);fencePost(x,B);}for(let z=-B;z<=B;z+=4){fencePost(-B,z);fencePost(B,z);}
+}
+function fencePost(x,z){const p=box(.3,1.6,.3,0x8d6e63);p.position.set(x,.8,z);scene.add(p);addCollider(p);}
+function buildHouse(pos){const g=new THREE.Group();g.position.copy(pos);
+  const base=box(6,3,6,0xd7b899);base.position.y=1.5;g.add(base);
+  const roof=box(6.6,1.6,6.6,0xc0392b);roof.position.y=3.6;g.add(roof);
+  const door=box(1.2,2,.2,0x6d4c41);door.position.set(0,1,3.05);g.add(door);
+  [-2,2].forEach(x=>{const w=box(1.2,1.2,.2,0x81d4fa);w.position.set(x,1.8,3.05);g.add(w);});
+  const sign=box(2.4,.7,.2,0x4e342e);sign.position.set(0,3,3.2);g.add(sign);
+  scene.add(g);base.updateMatrixWorld();addCollider(base,0);}
+function buildApartment(pos,floors){const g=new THREE.Group();g.position.copy(pos);const w=8,d=8,fh=2.6;
+  const shell=box(w,fh*floors,d,pick([0xbdbdbd,0xcfd8dc,0xd7ccc8]));shell.position.y=fh*floors/2;g.add(shell);
+  for(let f=0;f<floors;f++)for(let wx=-1;wx<=1;wx++){
+    const a=box(1.3,1.3,.2,0x64b5f6);a.position.set(wx*2.4,fh*f+1.6,d/2+.01);g.add(a);
+    const b=box(1.3,1.3,.2,0x64b5f6);b.position.set(wx*2.4,fh*f+1.6,-d/2-.01);g.add(b);}
+  const roof=box(w+.6,.6,d+.6,0x455a64);roof.position.y=fh*floors+.3;g.add(roof);
+  scene.add(g);shell.updateMatrixWorld();addCollider(shell,0);}
+function buildTree(x,z){const g=new THREE.Group();g.position.set(x,0,z);
+  const trunk=box(.7,2,.7,0x795548);trunk.position.y=1;g.add(trunk);
+  const l1=box(2.6,2.2,2.6,0x2e7d32);l1.position.y=2.8;g.add(l1);
+  const l2=box(1.8,1.6,1.8,0x388e3c);l2.position.y=3.8;g.add(l2);
+  scene.add(g);trunk.updateMatrixWorld();addCollider(trunk,.2);}
+function buildTallGrass(x,z){const g=new THREE.Group();g.position.set(x,0,z);
+  for(let i=0;i<5;i++){const bl=box(.18,rand(.8,1.4),.18,pick([0x4caf50,0x66bb6a,0x81c784]));bl.position.set(rand(-.6,.6),.7,rand(-.6,.6));g.add(bl);}scene.add(g);}
+function buildChest(pos){const g=new THREE.Group();g.position.copy(pos);
+  const b=box(1.2,.8,.9,0x8d6e63);b.position.y=.4;g.add(b);
+  const lid=box(1.25,.35,.95,0xa1887f);lid.position.y=.95;g.add(lid);
+  const lock=box(.2,.3,.1,0xffca28);lock.position.set(0,.7,.48);g.add(lock);
+  scene.add(g);b.updateMatrixWorld();addCollider(b,.1);}
+
+function spawnBalls(n){for(let i=0;i<n;i++){const kind=randomBallKind();const g=buildBall(kind);
+  let x,z,ok,tries=0;do{x=rand(-52,52);z=rand(-52,52);ok=Math.hypot(x-0,z-10)>6&&!nearCollider(x,z,1.2);tries++;}while(!ok&&tries<40);
+  g.position.set(x,.45,z);scene.add(g);world.balls.push(g);}}
+function spawnMonsters(n,forceStrong){for(let i=0;i<n;i++){
+  let key,strong;
+  const rare=Math.random()<.06;
+  if(rare){key="drake";strong=true;}
+  else{key=pick(WILD_POOL);strong=forceStrong||Math.random()<.16;}
+  const m=buildMonster(key,strong);
+  let x,z,tries=0;do{x=rand(-50,50);z=rand(-50,50);tries++;}while((Math.hypot(x,z-10)<10||nearCollider(x,z,1.5))&&tries<40);
+  m.position.set(x,0,z);m.userData.wander={t:rand(0,6),dir:rand(0,Math.PI*2),speed:rand(.6,1.4),moving:true};
+  scene.add(m);world.monsters.push(m);}}
+
+// ---------- player ----------
+function buildPlayer(){
+  player=new THREE.Group();
+  const body=box(.7,1,.4,0x3949ab);body.position.y=1;player.add(body);
+  const head=box(.55,.55,.55,0xffcc80);head.position.y=1.8;player.add(head);
+  const hat=box(.65,.25,.65,0xd32f2f);hat.position.y=2.15;player.add(hat);
+  const bill=box(.65,.12,.3,0xd32f2f);bill.position.set(0,2.05,.4);player.add(bill);
+  [-0.13,0.13].forEach(x=>{const e=box(.1,.1,.05,0x222222);e.position.set(x,1.85,.28);player.add(e);});
+  const aL=box(.18,.7,.18,0x3949ab);aL.position.set(-.44,1.05,0);player.add(aL);
+  const aR=box(.18,.7,.18,0x3949ab);aR.position.set(.44,1.05,0);player.add(aR);
+  const lL=box(.24,.6,.24,0x1a237e);lL.position.set(-.18,.3,0);player.add(lL);
+  const lR=box(.24,.6,.24,0x1a237e);lR.position.set(.18,.3,0);player.add(lR);
+  player.userData.legs=[lL,lR];player.userData.arms=[aL,aR];
+  player.position.set(0,0,-2);scene.add(player);
+}
+function ensureBuddy(){
+  if(!partner)return;
+  if(player.userData.buddy){scene.remove(player.userData.buddy);}
+  const pm=buildMonster(partner,false);pm.scale.set(.7,.7,.7);pm.position.copy(player.position).add(new THREE.Vector3(1.5,0,1));scene.add(pm);player.userData.buddy=pm;
+}
+
+// ---------- input ----------
+function setupInput(){
+  window.addEventListener("keydown",e=>{state.keys[e.code]=true;
+    if(e.code==="Space"){e.preventDefault();doAction();}
+    if(e.code==="KeyE")doAction();
+    if(e.code==="Escape"&&state.started)toggleMenu();});
+  window.addEventListener("keyup",e=>{state.keys[e.code]=false;});
+  const gm=document.getElementById("game");
+  let dragging=false,lx=0,ly=0,moved=0;
+  gm.addEventListener("mousedown",e=>{dragging=true;lx=e.clientX;ly=e.clientY;moved=0;});
+  window.addEventListener("mouseup",()=>dragging=false);
+  window.addEventListener("mousemove",e=>{if(!dragging)return;
+    const dx=e.clientX-lx,dy=e.clientY-ly;moved+=Math.abs(dx)+Math.abs(dy);
+    state.yaw-=dx*.005;state.pitch-=dy*.005;state.pitch=Math.max(-.2,Math.min(.9,state.pitch));lx=e.clientX;ly=e.clientY;});
+  gm.addEventListener("click",()=>{if(!state.isMobile&&moved<6)doAction();});
+  if(state.isMobile){document.getElementById("touch").style.display="block";setupJoystick();setupLookPad();
+    document.getElementById("actBtn").addEventListener("touchstart",e=>{e.preventDefault();doAction();});}
+}
+function setupJoystick(){const joy=document.getElementById("joy"),nub=document.getElementById("joyNub");let active=false,cx=0,cy=0;
+  const start=e=>{active=true;const r=joy.getBoundingClientRect();cx=r.left+r.width/2;cy=r.top+r.height/2;move(e);};
+  const move=e=>{if(!active)return;e.preventDefault();const t=e.touches[0];let dx=t.clientX-cx,dy=t.clientY-cy;const max=48,d=Math.hypot(dx,dy);if(d>max){dx=dx/d*max;dy=dy/d*max;}nub.style.transform=`translate(${dx-28}px,${dy-28}px)`;state.moveVec.x=dx/max;state.moveVec.y=dy/max;};
+  const end=()=>{active=false;state.moveVec.x=0;state.moveVec.y=0;nub.style.transform="translate(-50%,-50%)";};
+  joy.addEventListener("touchstart",start,{passive:false});joy.addEventListener("touchmove",move,{passive:false});joy.addEventListener("touchend",end);}
+function setupLookPad(){const pad=document.getElementById("look");let lx=0,ly=0,on=false;
+  pad.addEventListener("touchstart",e=>{on=true;const t=e.touches[0];lx=t.clientX;ly=t.clientY;},{passive:false});
+  pad.addEventListener("touchmove",e=>{if(!on)return;e.preventDefault();const t=e.touches[0];state.yaw-=(t.clientX-lx)*.006;state.pitch-=(t.clientY-ly)*.006;state.pitch=Math.max(-.2,Math.min(.9,state.pitch));lx=t.clientX;ly=t.clientY;},{passive:false});
+  pad.addEventListener("touchend",()=>on=false);}
+
+// ---------- actions ----------
+function doAction(){
+  if(state.inCapture||!state.started)return;
+  if(state.nearMon&&totalBalls()>0){startCapture(state.nearMon);return;}
+  if(state.nearMon){toast("몬스터볼이 없어요! 먼저 볼을 찾으세요.");return;}
+  if(state.nearBall){pickBall(state.nearBall);return;}
+}
+function pickBall(g){const kind=g.userData.kind;scene.remove(g);world.balls=world.balls.filter(b=>b!==g);
+  state.balls[kind]++;updateBag();saveGame();toast(BALLS[kind].name+"을(를) 찾았다! (+1)");state.nearBall=null;}
+
+// ---------- capture ----------
+function startCapture(mon){
+  state.inCapture=true;state.capMon=mon;
+  const key=mon.userData.species,s=SPECIES[key],strong=mon.userData.strong;
+  document.getElementById("capName").textContent=`야생 ${strong?"강한 ":""}${s.name} 등장!`;
+  document.getElementById("capName").style.color=BALLS.normal.color==="#"+s.color.toString(16)?"#fff":"#"+s.color.toString(16).padStart(6,"0");
+  document.getElementById("capTag").textContent=(strong?"⭐ 강한 개체 — 잡기 어렵다! ":"")+s.type+"타입";
+  document.getElementById("capTag").style.color=strong?"#ffd54f":"#c9c0da";
+  const cm=document.getElementById("capMon");cm.style.transform="";
+  cm.innerHTML=`<div style="font-size:${strong?120:96}px">${s.emoji}</div>`;
+  document.getElementById("capMsg").textContent="";document.getElementById("capMsg").style.color="#f6f1e7";
+  renderCaptureBalls();
+  document.getElementById("capture").style.display="flex";
+}
+function renderCaptureBalls(){
+  const wrap=document.getElementById("capBalls");wrap.innerHTML="";
+  let any=false;
+  BALL_ORDER.forEach(kind=>{
+    const cnt=state.balls[kind];if(cnt<=0)return;any=true;
+    const b=BALLS[kind];const btn=document.createElement("button");btn.className="pxbtn capBallBtn";
+    btn.innerHTML=`<span class="bdot" style="background:${b.color}"></span>${b.name}<small>x${cnt}${kind==="master"?" · 확정":""}</small>`;
+    btn.addEventListener("click",()=>throwBall(kind));
+    wrap.appendChild(btn);
+  });
+  if(!any){const p=document.createElement("div");p.textContent="던질 볼이 없어요…";p.style.opacity=.8;wrap.appendChild(p);}
+}
+function catchChance(mon,kind){
+  if(kind==="master")return 1;
+  const base=mon.userData.strong?0.30:0.70;
+  let c=base*BALLS[kind].mult;
+  if(partner&&SPECIES[partner].type===SPECIES[mon.userData.species].type)c+=0.10;
+  return Math.max(.05,Math.min(.95,c));
+}
+function throwBall(kind){
+  if(state.balls[kind]<=0)return;
+  state.balls[kind]--;updateBag();
+  document.querySelectorAll(".capBallBtn").forEach(b=>b.disabled=true);
+  const msg=document.getElementById("capMsg"),cm=document.getElementById("capMon");
+  msg.style.color="#f6f1e7";msg.textContent="던진다… 🎯";
+  let sh=0;const wob=setInterval(()=>{cm.style.transform=`rotate(${(sh%2?1:-1)*8}deg)`;sh++;},160);
+  setTimeout(()=>{
+    clearInterval(wob);cm.style.transform="";
+    const key=state.capMon.userData.species;
+    const success=Math.random()<catchChance(state.capMon,kind);
+    if(success){msg.style.color="#66bb6a";msg.textContent=`잡았다! ${SPECIES[key].name}을(를) 포획!`;captureSuccess(state.capMon);setTimeout(closeCapture,1500);}
+    else{msg.style.color="#ef5350";
+      if(totalBalls()>0){msg.textContent="아쉽다! 볼에서 튀어나왔다. 다시 던져보자.";renderCaptureBalls();}
+      else{msg.textContent="놓쳤다… 볼이 다 떨어졌어요.";setTimeout(closeCapture,1500);}}
+    saveGame();
+  },1400);
+}
+function captureSuccess(mon){const key=mon.userData.species;
+  state.captured[key]=(state.captured[key]||0)+1;
+  document.getElementById("dexCount").textContent=Object.keys(state.captured).length;
+  scene.remove(mon);world.monsters=world.monsters.filter(m=>m!==mon);
+  saveGame();setTimeout(()=>spawnMonsters(1),3000);}
+function closeCapture(){document.getElementById("capture").style.display="none";state.inCapture=false;state.capMon=null;state.nearMon=null;}
+
+// ---------- HUD ----------
+function updateBag(){
+  const bag=document.getElementById("bag");bag.innerHTML="";
+  BALL_ORDER.forEach(kind=>{
+    if(state.balls[kind]<=0&&kind!=="normal")return;
+    const el=document.createElement("div");el.className="bagItem";
+    el.innerHTML=`<span class="bdot" style="background:${BALLS[kind].color}"></span>${state.balls[kind]}`;
+    el.title=BALLS[kind].name;bag.appendChild(el);
+  });
+}
+function renderDex(){const grid=document.getElementById("dexGrid");grid.innerHTML="";
+  Object.keys(SPECIES).forEach(key=>{const s=SPECIES[key];const cnt=state.captured[key]||0;
+    const cell=document.createElement("div");cell.className="dexcell"+(cnt?"":" empty");
+    cell.innerHTML=`<div class="swatch" style="background:#${s.color.toString(16).padStart(6,"0")}">${cnt?s.emoji:"❔"}</div>
+      <div class="nm">${cnt?s.name:"？？？"}</div><div class="ct">${cnt?("보유 "+cnt+" · "+s.type+"타입"):"미포획"}</div>`;
+    grid.appendChild(cell);});}
+let toastTimer=null;
+function toast(txt){const t=document.getElementById("toast");t.textContent=txt;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2200);}
+
+// ---------- loop ----------
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=Math.min(clock.getDelta(),.05),time=clock.elapsedTime;
+  if(state.started&&!state.inCapture){
+    updatePlayer(dt,time);updateProximity();
+    state.ballTimer-=dt;if(state.ballTimer<=0){state.ballTimer=16;if(world.balls.length<18)spawnBalls(1);}
+    if(world.monsters.length<9&&Math.random()<dt*.3)spawnMonsters(1);
+    state.saveTimer-=dt;if(state.saveTimer<=0){state.saveTimer=5;saveGame();}
+  }
+  world.balls.forEach(b=>{b.rotation.y+=b.userData.spin*dt;b.position.y=.45+Math.sin(time*2+b.position.x)*.12;});
+  world.monsters.forEach(m=>updateMonster(m,dt,time));
+  if(player&&player.userData.buddy){const bud=player.userData.buddy;
+    const tgt=new THREE.Vector3().copy(player.position).add(new THREE.Vector3(Math.cos(state.yaw+1.4)*2,0,Math.sin(state.yaw+1.4)*2));
+    bud.position.lerp(tgt,.05);bud.position.y=Math.abs(Math.sin(time*3))*.12;bud.rotation.y=state.yaw;}
+  updateCamera();renderer.render(scene,camera);
+}
+function updatePlayer(dt,time){
+  let fx=0,fz=0;
+  if(state.keys["KeyW"]||state.keys["ArrowUp"])fz+=1;
+  if(state.keys["KeyS"]||state.keys["ArrowDown"])fz-=1;
+  if(state.keys["KeyA"]||state.keys["ArrowLeft"])fx-=1;
+  if(state.keys["KeyD"]||state.keys["ArrowRight"])fx+=1;
+  if(state.moveVec.x||state.moveVec.y){fx+=state.moveVec.x;fz-=state.moveVec.y;}
+  const len=Math.hypot(fx,fz);
+  if(len>.05){fx/=len;fz/=len;
+    const speed=6,sin=Math.sin(state.yaw),cos=Math.cos(state.yaw);
+    const dirX=sin*fz+cos*fx,dirZ=cos*fz-sin*fx;
+    const nx=player.position.x+dirX*speed*dt,nz=player.position.z+dirZ*speed*dt;
+    if(!collides(nx,player.position.z))player.position.x=nx;
+    if(!collides(player.position.x,nz))player.position.z=nz;
+    player.rotation.y=Math.atan2(dirX,dirZ);
+    const sw=Math.sin(time*10)*.5;
+    player.userData.legs[0].rotation.x=sw;player.userData.legs[1].rotation.x=-sw;
+    player.userData.arms[0].rotation.x=-sw;player.userData.arms[1].rotation.x=sw;
+  }else{player.userData.legs.forEach(l=>l.rotation.x*=.8);player.userData.arms.forEach(a=>a.rotation.x*=.8);}
+  let deg=(-state.yaw*180/Math.PI)%360;if(deg<0)deg+=360;
+  const dirs=["N","NE","E","SE","S","SW","W","NW"];document.getElementById("compass").textContent=dirs[Math.round(deg/45)%8];
+}
+function updateMonster(m,dt,time){const w=m.userData.wander;if(w){w.t-=dt;
+  if(w.t<=0){w.t=rand(1.5,4);w.dir=rand(0,Math.PI*2);w.moving=Math.random()<.7;}
+  if(w.moving){const nx=m.position.x+Math.cos(w.dir)*w.speed*dt,nz=m.position.z+Math.sin(w.dir)*w.speed*dt;
+    if(!collides(nx,m.position.z)&&Math.abs(nx)<54)m.position.x=nx;else w.dir=Math.PI-w.dir;
+    if(!collides(m.position.x,nz)&&Math.abs(nz)<54)m.position.z=nz;else w.dir=-w.dir;
+    m.rotation.y=-w.dir+Math.PI/2;}
+  m.position.y=Math.abs(Math.sin(time*3+m.position.x))*.12;}
+  if(m.userData.aura)m.userData.aura.rotation.z+=dt*2;}
+function updateProximity(){const p=player.position;
+  let nb=null,nbd=2.2;world.balls.forEach(b=>{const d=b.position.distanceTo(p);if(d<nbd){nbd=d;nb=b;}});state.nearBall=nb;
+  let nm=null,nmd=2.6;world.monsters.forEach(m=>{const d=m.position.distanceTo(p);if(d<nmd){nmd=d;nm=m;}});state.nearMon=nm;
+  const prompt=document.getElementById("prompt"),act=state.isMobile?"[행동]":"[E / 클릭]";
+  if(nm){const s=SPECIES[nm.userData.species],st=nm.userData.strong?"강한 ":"";
+    prompt.innerHTML=totalBalls()>0?`야생 <b>${st}${s.name}</b> · ${act} 잡기`:`야생 <b>${st}${s.name}</b> · 볼이 없어요`;prompt.style.display="block";}
+  else if(nb){prompt.innerHTML=`${BALLS[nb.userData.kind].name} 발견! ${act} 줍기`;prompt.style.display="block";}
+  else prompt.style.display="none";}
+function updateCamera(){if(!player)return;const dist=7,height=4;
+  const tx=player.position.x-Math.sin(state.yaw)*dist*Math.cos(state.pitch);
+  const tz=player.position.z-Math.cos(state.yaw)*dist*Math.cos(state.pitch);
+  const ty=player.position.y+height+Math.sin(state.pitch)*dist;
+  camera.position.lerp(new THREE.Vector3(tx,ty,tz),.15);
+  camera.lookAt(player.position.x,player.position.y+1.6,player.position.z);}
+
+// ---------- menu / flow ----------
+function toggleMenu(){const m=document.getElementById("menu");m.style.display=m.style.display==="flex"?"none":"flex";}
+function goHome(){player.position.set(HOME.x,0,HOME.z);state.yaw=0;ensureBuddy();document.getElementById("menu").style.display="none";toast("🏠 집으로 돌아왔습니다.");saveGame();}
+function goToMain(){saveGame();state.started=false;document.getElementById("menu").style.display="none";document.getElementById("hud").style.display="none";showTitle(true);}
+function showTitle(resume){
+  document.getElementById("overlay").style.display="flex";
+  document.getElementById("resumeRow").style.display=resume?"flex":"none";
+  document.getElementById("newGameArea").style.display=resume?"none":"block";
+}
+function enterGame(){
+  state.hasGame=true;state.started=true;
+  document.getElementById("overlay").style.display="none";
+  document.getElementById("hud").style.display="block";
+  updateBag();document.getElementById("dexCount").textContent=Object.keys(state.captured).length;
+  ensureBuddy();saveGame();
+}
+function applySave(sv){
+  partner=sv.partner||"leaf";
+  state.captured=sv.captured||{};
+  state.balls=Object.assign({normal:0,super:0,hyper:0,master:0},sv.balls||{});
+  state.yaw=sv.yaw||0;
+  if(sv.pos)player.position.set(sv.pos.x,0,sv.pos.z);
+}
+function newGame(){
+  clearSave();
+  state.captured={};state.balls={normal:3,super:0,hyper:0,master:0};
+  state.yaw=0;player.position.set(0,0,-2);
+  enterGame();
+  const s=SPECIES[partner];
+  setTimeout(()=>toast(`${s.name}와(과) 함께 모험을 시작합니다! (몬스터볼 3개 지급)`),300);
+  setTimeout(()=>toast("풀숲과 건물 주변에 숨겨진 볼을 찾아보세요."),2900);
+}
+
+// ---------- boot ----------
+function init(){
+  clock=new THREE.Clock();
+  renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  document.getElementById("game").appendChild(renderer.domElement);
+  camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,.1,300);
+  camera.position.set(0,6,14);
+  buildWorld();buildPlayer();spawnBalls(16);spawnMonsters(9);setupInput();
+  window.addEventListener("resize",()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
+  window.addEventListener("beforeunload",saveGame);
+  animate();
+}
+function buildPartnerCards(){const wrap=document.getElementById("partners");
+  ["leaf","ember","aqua"].forEach(key=>{const s=SPECIES[key];const c=document.createElement("div");c.className="pcard";c.dataset.key=key;
+    c.innerHTML=`<div class="art" style="background:#${s.color.toString(16).padStart(6,"0")}22"><div style="font-size:72px">${s.emoji}</div></div>
+      <div class="pname">${s.name}</div><span class="ptype ${s.tclass}">${s.type}타입</span><div class="pdesc">${s.desc}</div>`;
+    c.addEventListener("click",()=>{document.querySelectorAll(".pcard").forEach(x=>x.classList.remove("sel"));c.classList.add("sel");partner=key;document.getElementById("startBtn").classList.add("ready");});
+    wrap.appendChild(c);});}
+
+window.addEventListener("DOMContentLoaded",()=>{
+  buildPartnerCards();
+  init();
+  const sv=loadSave();
+  showTitle(!!sv);
+
+  document.getElementById("startBtn").addEventListener("click",()=>{if(partner)newGame();});
+  document.getElementById("resumeBtn").addEventListener("click",()=>{const s=loadSave();if(s){applySave(s);}enterGame();});
+  document.getElementById("newBtn").addEventListener("click",()=>{if(confirm("저장된 모험을 지우고 처음부터 시작할까요?")){clearSave();partner=null;document.querySelectorAll(".pcard").forEach(x=>x.classList.remove("sel"));document.getElementById("startBtn").classList.remove("ready");showTitle(false);}});
+
+  document.getElementById("menuBtn").addEventListener("click",toggleMenu);
+  document.getElementById("mResume").addEventListener("click",toggleMenu);
+  document.getElementById("mDex").addEventListener("click",()=>{renderDex();document.getElementById("dex").style.display="flex";});
+  document.getElementById("mHome").addEventListener("click",goHome);
+  document.getElementById("mExit").addEventListener("click",goToMain);
+  document.getElementById("mHelp").addEventListener("click",()=>{document.getElementById("menu").style.display="none";toast(state.isMobile?"조이스틱=이동 · 오른쪽 화면=시점 · 행동버튼=줍기/포획":"WASD=이동 · 마우스드래그=시점 · E/클릭=줍기/포획");});
+
+  document.getElementById("capRun").addEventListener("click",closeCapture);
+  document.getElementById("dexClose").addEventListener("click",()=>document.getElementById("dex").style.display="none");
+});
+
+})();
+</script>
+</body>
+</html>

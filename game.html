@@ -222,7 +222,7 @@ const state={
   captured:{}, yaw:0, pitch:0.25, keys:{}, moveVec:{x:0,y:0},
   nearBall:null, nearMon:null, inCapture:false, capMon:null,
   ballTimer:16, saveTimer:5,
-  isMobile:/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)||('ontouchstart'in window&&window.innerWidth<900)
+  isMobile:(navigator.maxTouchPoints>0)||('ontouchstart'in window)||(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
 };
 
 // ---------- helpers ----------

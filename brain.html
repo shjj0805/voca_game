@@ -140,7 +140,15 @@
     {key:'odd',  cat:'log', ic:'🔍', name:'다른 하나', tag:'논리 · 5문제',    run:stOdd},
     {key:'match',cat:'mem', ic:'🃏', name:'짝 맞추기', tag:'기억력 · 5×5',    run:stMatch},
   ];
+  const BEST_KEY='brainBest';
   const best={seq:0,pat:0,spat:0,odd:0,match:0};
+  (function loadBest(){
+    try{
+      const saved=JSON.parse(localStorage.getItem(BEST_KEY)||'{}');
+      for(const k in best){ if(typeof saved[k]==='number') best[k]=saved[k]; }
+    }catch(e){}
+  })();
+  function saveBest(){ try{ localStorage.setItem(BEST_KEY, JSON.stringify(best)); }catch(e){} }
   const totalStars=()=>Object.values(best).reduce((a,b)=>a+b,0);
   const starMini=n=>'⭐'.repeat(n)+`<span class="e">${'☆'.repeat(3-n)}</span>`;
   const starsFor=(c,t)=> c>=t?3 : c>=Math.ceil(t/2)?2 : 1;
@@ -171,7 +179,7 @@
   function bindBack(){ const b=$('#back'); if(b) b.onclick=home; }
 
   function gameResult(key,earned,correct,total,extra){
-    best[key]=Math.max(best[key],earned);
+    best[key]=Math.max(best[key],earned); saveBest();
     const g=GAMES.find(x=>x.key===key);
     const msg=earned===3?'완벽해요! 최고! 🏆':earned===2?'잘했어요! 조금만 더! 🎉':'좋아요, 계속 도전! 💪';
     screen.innerHTML=`<div class="screen">

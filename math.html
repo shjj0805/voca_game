@@ -47,6 +47,8 @@
   .bigbtn:active{ transform:translateY(6px); box-shadow:0 2px 0 #c72e63; }
   .bigbtn.green{ background:linear-gradient(180deg,#6ce0b0,#28b483); box-shadow:0 8px 0 #1a8a63,0 12px 18px rgba(0,0,0,.2); }
   .bigbtn.green:active{ box-shadow:0 2px 0 #1a8a63; }
+  .resetbtn{ border:none; cursor:pointer; font-family:var(--font); font-weight:800; color:#fff; font-size:14px; padding:9px 18px; border-radius:999px; background:rgba(255,255,255,.18); box-shadow:0 3px 0 rgba(0,0,0,.18); margin-top:4px; transition:transform .08s,box-shadow .08s; }
+  .resetbtn:active{ transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.18); }
 
   .screen-title{ color:#fff; font-weight:900; font-size:24px; text-align:center; margin:2px 0 12px; text-shadow:0 3px 0 rgba(43,35,80,.35); }
 
@@ -171,6 +173,7 @@
     <div class="title-monster" id="titleMonster"></div>
     <button class="bigbtn" id="startBtn">🎮 모험 시작</button>
     <button class="bigbtn green" id="dexBtn">📖 몬스터 도감</button>
+    <button class="resetbtn" id="resetBtn">🔄 학습 초기화</button>
   </section>
 
   <!-- MAP -->
@@ -228,6 +231,15 @@
   <div class="catch-title">지역 완료!</div>
   <div class="catch-sub" id="clearSub"></div>
   <button class="bigbtn" id="clearNext" style="margin-top:18px;max-width:260px">지도로 가기 ➜</button>
+</div>
+<div class="overlay" id="resetOverlay">
+  <div class="clear-emoji">🔄</div>
+  <div class="catch-title">학습 초기화</div>
+  <div class="catch-sub">지금까지 모은 별과 잡은 몬스터,<br>모험 진행이 모두 사라져요.<br>정말 처음부터 다시 시작할까요?</div>
+  <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center">
+    <button class="bigbtn" id="resetCancel" style="max-width:150px;background:linear-gradient(180deg,#c9c3e0,#9a91c0);box-shadow:0 8px 0 #6f6699,0 12px 18px rgba(0,0,0,.2)">아니요</button>
+    <button class="bigbtn" id="resetConfirm" style="max-width:150px">초기화</button>
+  </div>
 </div>
 
 <script>
@@ -322,6 +334,14 @@ const defaultState={progress:{},caught:{},stars:0,cleared:{}};
 let state=load();
 function load(){ try{ const s=JSON.parse(store.get('mathmon2'))||{}; return {progress:Object.assign({},s.progress),caught:Object.assign({},s.caught),cleared:Object.assign({},s.cleared),stars:s.stars||0}; }catch(e){ return {progress:{},caught:{},cleared:{},stars:0}; } }
 function save(){ store.set('mathmon2',JSON.stringify(state)); }
+function resetProgress(){
+  state={progress:{},caught:{},cleared:{},stars:0};
+  typeBag=[]; curRegion=null; enc=null;
+  save(); refreshBar();
+  sndCorrect();
+  $('feedback').textContent='';
+  show('title');
+}
 const prog=r=>state.progress[r]||0;
 const caughtCount=()=>Object.keys(state.caught).length;
 function isUnlocked(rid){ const i=REGIONS.findIndex(r=>r.id===rid); if(i===0)return true; return !!state.cleared[REGIONS[i-1].id]; }
@@ -584,6 +604,9 @@ function renderDex(){
 /* ================= events ================= */
 $('startBtn').onclick=()=>{ ensureAudio(); sndTap(); renderMap(); show('map'); };
 $('dexBtn').onclick=()=>{ ensureAudio(); sndTap(); renderDex(); show('dex'); };
+$('resetBtn').onclick=()=>{ ensureAudio(); sndTap(); $('resetOverlay').classList.add('show'); };
+$('resetCancel').onclick=()=>{ sndTap(); $('resetOverlay').classList.remove('show'); };
+$('resetConfirm').onclick=()=>{ resetProgress(); $('resetOverlay').classList.remove('show'); };
 $('homeBtn').onclick=()=>{ sndTap(); show('title'); };
 $('jBack').onclick=()=>{ sndTap(); renderMap(); show('map'); };
 $('bBack').onclick=()=>{ stopTimer(); answered=true; $('battleMonster').classList.remove('flee'); sndTap(); renderJourney(); show('journey'); };

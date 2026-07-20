@@ -25,26 +25,28 @@
 
   /* ---------- Title / Partner select ---------- */
   #overlay{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:linear-gradient(180deg,#8fd3ff 0%,#bfe9ff 45%,#ffe6b3 100%);text-align:center;padding:24px;overflow:auto;}
-  #overlay h1{font-size:clamp(30px,7vw,64px);color:#fff;line-height:1.05;text-shadow:0 3px 0 #2b6cff,0 6px 12px rgba(0,0,0,.25);letter-spacing:1px;}
+    background:linear-gradient(180deg,#8fd3ff 0%,#bfe9ff 45%,#ffe6b3 100%);text-align:center;padding:16px;overflow-y:auto;}
+  #overlay h1{font-size:clamp(26px,6vw,64px);color:#fff;line-height:1.05;text-shadow:0 3px 0 #2b6cff,0 6px 12px rgba(0,0,0,.25);letter-spacing:1px;}
+  #overlay p.sub{margin-top:8px;color:#274b6d;font-weight:700;font-size:clamp(12px,2.6vw,18px);}
   #overlay h1 span{color:var(--gold);text-shadow:0 3px 0 #b26a00,0 6px 12px rgba(0,0,0,.25);}
-  #overlay p.sub{margin-top:10px;color:#274b6d;font-weight:700;font-size:clamp(14px,2.6vw,18px);}
-  .stage{margin-top:12px;background:rgba(43,36,56,.82);border-radius:18px;padding:22px;max-width:760px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3);}
-  .stage h2{font-size:20px;margin-bottom:4px;}
-  .stage .hint{color:#c9c0da;font-size:13px;margin-bottom:16px;}
+  .stage{margin-top:12px;background:rgba(43,36,56,.82);border-radius:18px;padding:clamp(14px,3vw,22px);max-width:760px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3);}
+  .stage h2{font-size:clamp(16px,4vw,20px);margin-bottom:4px;}
+  .stage .hint{color:#c9c0da;font-size:clamp(11px,2.6vw,13px);margin-bottom:14px;}
   #resumeRow{display:none;flex-direction:column;gap:10px;align-items:center;margin-bottom:8px;}
   #resumeBtn{font-size:20px;padding:14px 34px;background:linear-gradient(180deg,#8be08b,#43a047);color:#0c2b0c;border-color:#fff5;}
   #newBtn{font-size:13px;background:transparent;border:none;color:#c9c0da;text-decoration:underline;cursor:pointer;font-family:inherit;}
-  .partners{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
-  .pcard{width:190px;background:var(--panel-2);border:2px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;cursor:pointer;transition:transform .12s,border-color .12s,box-shadow .12s;}
+  #backToResume{display:none;font-size:13px;background:transparent;border:none;color:#c9c0da;text-decoration:underline;cursor:pointer;font-family:inherit;margin-bottom:10px;}
+  .partners{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,2vw,14px);justify-content:center;}
+  .pcard{width:100%;background:var(--panel-2);border:2px solid rgba(255,255,255,.08);border-radius:14px;padding:clamp(8px,2vw,14px);cursor:pointer;transition:transform .12s,border-color .12s,box-shadow .12s;}
   .pcard:hover{transform:translateY(-4px);}
   .pcard.sel{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,207,77,.35);}
-  .pcard .art{height:120px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
-  .pcard .pname{font-weight:800;margin-top:10px;font-size:17px;}
-  .pcard .ptype{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
-  .pcard .pdesc{font-size:12px;color:#c9c0da;margin-top:8px;line-height:1.4;}
+  .pcard .art{height:clamp(64px,16vw,120px);border-radius:10px;display:flex;align-items:center;justify-content:center;}
+  .pcard .art .emj{font-size:clamp(38px,10vw,72px);line-height:1;}
+  .pcard .pname{font-weight:800;margin-top:8px;font-size:clamp(13px,3vw,17px);}
+  .pcard .ptype{display:inline-block;margin-top:6px;font-size:clamp(10px,2.4vw,12px);font-weight:700;padding:3px 10px;border-radius:20px;}
+  .pcard .pdesc{font-size:clamp(10px,2.3vw,12px);color:#c9c0da;margin-top:8px;line-height:1.4;}
   .t-leaf{background:var(--leaf);} .t-ember{background:var(--ember);} .t-aqua{background:var(--aqua);}
-  #startBtn{margin-top:18px;font-size:18px;padding:12px 30px;opacity:.4;pointer-events:none;}
+  #startBtn{margin-top:16px;font-size:clamp(15px,3.6vw,18px);padding:12px 30px;opacity:.4;pointer-events:none;}
   #startBtn.ready{opacity:1;pointer-events:auto;background:linear-gradient(180deg,#ffd766,#f5a623);color:#3a2600;border-color:#fff3;}
 
   /* ---------- HUD ---------- */
@@ -70,11 +72,23 @@
   #menu .pxbtn{display:block;width:100%;margin:10px 0;font-size:16px;}
 
   /* ---------- Capture ---------- */
-  #capture{position:fixed;inset:0;z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,rgba(60,40,90,.55),rgba(8,6,14,.92));padding:20px;text-align:center;}
-  #capName{font-weight:900;font-size:24px;margin-bottom:8px;text-shadow:0 2px 0 #000;}
-  #capTag{font-weight:800;font-size:14px;margin-bottom:14px;min-height:18px;}
+  #capture{position:fixed;inset:0;z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,rgba(60,40,90,.55),rgba(8,6,14,.92));padding:20px;text-align:center;overflow-y:auto;}
+  #capName{font-weight:900;font-size:24px;margin-bottom:4px;text-shadow:0 2px 0 #000;}
+  #capCP{font-weight:900;font-size:18px;color:#ffd54f;margin-bottom:6px;text-shadow:0 2px 0 #000;}
+  #capTag{font-weight:800;font-size:14px;margin-bottom:10px;min-height:18px;}
   #capMon{transition:transform .12s;}
-  #capBalls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+  #capQuiz{margin-top:12px;max-width:440px;width:100%;}
+  #capQuiz .qq{font-size:12px;color:#c9c0da;margin-bottom:10px;}
+  #capQuiz .quizchar{display:flex;align-items:flex-end;gap:8px;justify-content:center;margin-bottom:14px;}
+  #capQuiz .prof{font-size:52px;flex:none;line-height:1;animation:profbob 1.6s ease-in-out infinite;}
+  @keyframes profbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  #capQuiz .bubble{position:relative;background:#fff;color:#1a1a1a;border-radius:14px;padding:12px 16px;font-weight:800;font-size:16px;max-width:320px;text-align:left;box-shadow:0 4px 0 rgba(0,0,0,.25);white-space:pre-line;line-height:1.35;}
+  #capQuiz .bubble::after{content:"";position:absolute;left:-11px;bottom:16px;border:7px solid transparent;border-right-color:#fff;}
+  #capQuiz .qopts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .qopt{font-size:17px;font-weight:900;padding:13px 8px;line-height:1.2;}
+  .qopt.qok{background:linear-gradient(180deg,#8be08b,#43a047);color:#0c2b0c;border-color:#fff5;}
+  .qopt.qbad{background:linear-gradient(180deg,#ff8a80,#e53935);color:#3a0000;border-color:#fff5;}
+  #capBalls{display:none;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
   .capBallBtn{min-width:96px;font-size:14px;padding:12px 14px;display:flex;flex-direction:column;align-items:center;gap:6px;}
   .capBallBtn .bdot{width:22px;height:22px;}
   .capBallBtn small{opacity:.85;font-weight:700;}
@@ -113,6 +127,7 @@
       <button id="newBtn">처음부터 새로 시작</button>
     </div>
     <div id="newGameArea">
+      <button id="backToResume">← 이어하기로 돌아가기</button>
       <h2>파트너를 선택하세요</h2>
       <div class="hint">가장 먼저 함께 모험을 떠날 친구를 골라주세요.</div>
       <div class="partners" id="partners"></div>
@@ -149,8 +164,10 @@
 <!-- Capture -->
 <div id="capture">
   <div id="capName"></div>
+  <div id="capCP"></div>
   <div id="capTag"></div>
   <div id="capMon"></div>
+  <div id="capQuiz"></div>
   <div id="capBalls"></div>
   <div id="capMsg"></div>
   <button id="capRun">도망가기</button>
@@ -189,17 +206,21 @@
 
 // ---------- Species ----------
 const SPECIES = {
-  leaf:  {name:"리플링", type:"풀",  color:0x4caf50, accent:0x2e7d32, emoji:"🌿", tclass:"t-leaf", desc:"이파리 꼬리를 흔드는 온순한 숲의 친구."},
-  ember: {name:"불꽃강아지", type:"불", color:0xff7043, accent:0xbf360c, emoji:"🔥", tclass:"t-ember", desc:"등에서 작은 불씨가 피어오르는 활발한 강아지."},
-  aqua:  {name:"물방울핀", type:"물", color:0x42a5f5, accent:0x1565c0, emoji:"💧", tclass:"t-aqua", desc:"물웅덩이를 좋아하는 반짝이는 지느러미 친구."},
-  spark: {name:"번쩍쥐", type:"전기", color:0xffd54f, accent:0xf9a825, emoji:"⚡", tclass:"t-ember", desc:"볼에 정전기를 모으는 재빠른 꼬마."},
-  rocky: {name:"돌덩이", type:"바위", color:0x9e9e9e, accent:0x616161, emoji:"🪨", tclass:"t-aqua", desc:"평지에 앉아 햇볕을 쬐는 느긋한 바위."},
-  puff:  {name:"솜뭉치", type:"노말", color:0xf8bbd0, accent:0xec407a, emoji:"☁️", tclass:"t-leaf", desc:"바람에 둥실 떠다니는 폭신한 솜뭉치."},
-  bug:   {name:"잎벌레", type:"벌레", color:0x9ccc65, accent:0x558b2f, emoji:"🐛", tclass:"t-leaf", desc:"풀숲을 조용히 기어다니는 작은 벌레."},
-  night: {name:"별그림자", type:"고스트", color:0x7e57c2, accent:0x4527a0, emoji:"🌙", tclass:"t-aqua", desc:"아침 그늘에 살짝 남아있는 신비로운 그림자."},
-  drake: {name:"용의알", type:"드래곤", color:0x26a69a, accent:0x00695c, emoji:"🐉", tclass:"t-aqua", desc:"아주 드물게 나타나는 강한 아기 용. 잡기 어렵다!"},
+  puff:  {name:"솜뭉치", type:"노말", color:0xf8bbd0, accent:0xec407a, emoji:"☁️", tclass:"t-leaf", baseCP:120, desc:"바람에 둥실 떠다니는 폭신한 솜뭉치."},
+  bug:   {name:"잎벌레", type:"벌레", color:0x9ccc65, accent:0x558b2f, emoji:"🐛", tclass:"t-leaf", baseCP:140, desc:"풀숲을 조용히 기어다니는 작은 벌레."},
+  leaf:  {name:"리플링", type:"풀",  color:0x4caf50, accent:0x2e7d32, emoji:"🌿", tclass:"t-leaf", baseCP:220, desc:"이파리 꼬리를 흔드는 온순한 숲의 친구."},
+  aqua:  {name:"물방울핀", type:"물", color:0x42a5f5, accent:0x1565c0, emoji:"💧", tclass:"t-aqua", baseCP:230, desc:"물웅덩이를 좋아하는 반짝이는 지느러미 친구."},
+  ember: {name:"불꽃강아지", type:"불", color:0xff7043, accent:0xbf360c, emoji:"🔥", tclass:"t-ember", baseCP:240, desc:"등에서 작은 불씨가 피어오르는 활발한 강아지."},
+  gale:  {name:"바람새", type:"비행", color:0x90caf9, accent:0x1e88e5, emoji:"🕊️", tclass:"t-aqua", baseCP:260, desc:"아침 바람을 타고 낮게 나는 새."},
+  spark: {name:"번쩍쥐", type:"전기", color:0xffd54f, accent:0xf9a825, emoji:"⚡", tclass:"t-ember", baseCP:300, desc:"볼에 정전기를 모으는 재빠른 꼬마."},
+  frost: {name:"얼음톡", type:"얼음", color:0x81d4fa, accent:0x0288d1, emoji:"❄️", tclass:"t-aqua", baseCP:320, desc:"발끝에 서리를 남기며 다니는 친구."},
+  toxi:  {name:"독방울", type:"독", color:0x9575cd, accent:0x6a1b9a, emoji:"🟣", tclass:"t-leaf", baseCP:340, desc:"몸에서 보라빛 거품이 보글보글."},
+  rocky: {name:"돌덩이", type:"바위", color:0x9e9e9e, accent:0x616161, emoji:"🪨", tclass:"t-aqua", baseCP:400, desc:"평지에 앉아 햇볕을 쬐는 느긋한 바위."},
+  night: {name:"별그림자", type:"고스트", color:0x7e57c2, accent:0x4527a0, emoji:"🌙", tclass:"t-aqua", baseCP:520, desc:"아침 그늘에 살짝 남아있는 신비로운 그림자."},
+  iron:  {name:"강철고치", type:"강철", color:0x90a4ae, accent:0x455a64, emoji:"⚙️", tclass:"t-aqua", baseCP:640, desc:"단단한 금속 껍질을 두른 튼튼한 몬스터."},
+  drake: {name:"용의알", type:"드래곤", color:0x26a69a, accent:0x00695c, emoji:"🐉", tclass:"t-aqua", baseCP:1500, desc:"아주 드물게 나타나는 강한 아기 용. 잡기 어렵다!"},
 };
-const WILD_POOL = ["leaf","ember","aqua","spark","rocky","puff","bug","night"];
+const WILD_POOL = ["puff","bug","leaf","aqua","ember","gale","spark","frost","toxi","rocky","night","iron"];
 
 // ---------- Ball types ----------
 const BALLS = {
@@ -221,8 +242,9 @@ const state={
   balls:{normal:0,super:0,hyper:0,master:0},
   captured:{}, yaw:0, pitch:0.25, keys:{}, moveVec:{x:0,y:0},
   nearBall:null, nearMon:null, inCapture:false, capMon:null,
+  quizBonus:false, quizDone:false, currentQuiz:null,
   ballTimer:16, saveTimer:5,
-  isMobile:(navigator.maxTouchPoints>0)||('ontouchstart'in window)||(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+  isMobile:/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>0)||('ontouchstart' in window)
 };
 
 // ---------- helpers ----------
@@ -230,6 +252,96 @@ function box(w,h,d,color){return new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new
 function rand(a,b){return a+Math.random()*(b-a);}
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function totalBalls(){return state.balls.normal+state.balls.super+state.balls.hyper+state.balls.master;}
+function ri(a,b){return Math.floor(rand(a,b+1));}
+function rollCP(baseCP,strong){let cp=baseCP*rand(0.6,1.4);if(strong)cp*=1.8;return Math.max(10,Math.round(cp));}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+// ---------- quiz data ----------
+const EN_QUIZ=[
+  {q:"What color is the sky?",a:"blue",opts:["blue","red","green","brown"]},
+  {q:"What color is grass?",a:"green",opts:["green","blue","pink","black"]},
+  {q:"Which animal says \"moo\"?",a:"cow",opts:["cow","cat","dog","duck"]},
+  {q:"Which animal says \"woof\"?",a:"dog",opts:["dog","cow","bird","fish"]},
+  {q:"How many legs does a dog have?",a:"four",opts:["four","two","six","eight"]},
+  {q:"What do you use to write?",a:"pencil",opts:["pencil","spoon","shoe","cup"]},
+  {q:"What do we drink?",a:"water",opts:["water","rock","paper","grass"]},
+  {q:"Which one is a fruit?",a:"apple",opts:["apple","chair","car","book"]},
+  {q:"Which one is an animal?",a:"tiger",opts:["tiger","apple","chair","blue"]},
+  {q:"The opposite of \"big\" is ___.",a:"small",opts:["small","tall","fast","hot"]},
+  {q:"The opposite of \"hot\" is ___.",a:"cold",opts:["cold","warm","big","happy"]},
+  {q:"The opposite of \"happy\" is ___.",a:"sad",opts:["sad","big","fast","red"]},
+  {q:"The sun is ___.",a:"hot",opts:["hot","cold","blue","small"]},
+  {q:"We sleep at ___.",a:"night",opts:["night","lunch","noon","school"]},
+  {q:"You hear with your ___.",a:"ears",opts:["ears","eyes","nose","hair"]},
+  {q:"You see with your ___.",a:"eyes",opts:["eyes","ears","feet","hands"]},
+  {q:"A baby dog is a ___.",a:"puppy",opts:["puppy","kitten","calf","chick"]},
+  {q:"A baby cat is a ___.",a:"kitten",opts:["kitten","puppy","cub","foal"]},
+  {q:"A ___ has wheels.",a:"car",opts:["car","fish","tree","cloud"]},
+  {q:"Cats like to catch ___.",a:"mice",opts:["mice","cars","books","rain"]},
+  {q:"Which day comes after Monday?",a:"Tuesday",opts:["Tuesday","Sunday","Friday","March"]},
+  {q:"Which season is cold and snowy?",a:"winter",opts:["winter","summer","spring","autumn"]},
+  {q:"Two plus two is ___.",a:"four",opts:["four","five","three","two"]},
+  {q:"Where do you learn?",a:"school",opts:["school","kitchen","garden","river"]},
+  {q:"We walk with our ___.",a:"feet",opts:["feet","ears","teeth","nose"]},
+  {q:"A bee makes ___.",a:"honey",opts:["honey","milk","bread","juice"]},
+  {q:"Fish live in the ___.",a:"water",opts:["water","sky","tree","fire"]},
+  {q:"Which one can fly?",a:"bird",opts:["bird","dog","fish","cat"]},
+];
+const IDIOMS=[
+  {word:"일석이조",meaning:"한 가지 일로 두 가지 이익을 얻음"},
+  {word:"우공이산",meaning:"꾸준히 노력하면 큰일을 이룰 수 있음"},
+  {word:"어부지리",meaning:"둘이 다투는 사이 엉뚱한 사람이 이익을 봄"},
+  {word:"유비무환",meaning:"미리 준비해 두면 걱정할 것이 없음"},
+  {word:"대기만성",meaning:"큰 인물은 늦게 이루어짐"},
+  {word:"다다익선",meaning:"많으면 많을수록 더 좋음"},
+  {word:"온고지신",meaning:"옛것을 익혀 새로운 것을 앎"},
+  {word:"청출어람",meaning:"제자가 스승보다 더 뛰어남"},
+  {word:"마이동풍",meaning:"남의 말을 귀담아듣지 않고 흘려버림"},
+  {word:"형설지공",meaning:"어려운 환경에서 애써 공부해 얻은 성과"},
+  {word:"새옹지마",meaning:"인생의 화와 복은 미리 알 수 없음"},
+  {word:"자업자득",meaning:"자기가 저지른 일의 결과를 자기가 받음"},
+  {word:"고진감래",meaning:"고생 끝에 즐거움이 옴"},
+  {word:"동고동락",meaning:"괴로움과 즐거움을 함께함"},
+  {word:"죽마고우",meaning:"어릴 때부터 함께 자란 오랜 친구"},
+  {word:"작심삼일",meaning:"굳게 먹은 마음이 사흘을 못 감"},
+  {word:"십중팔구",meaning:"열 가운데 여덟아홉, 거의 대부분"},
+  {word:"금상첨화",meaning:"좋은 일에 또 좋은 일이 더해짐"},
+  {word:"백발백중",meaning:"무슨 일이든 틀림없이 다 들어맞음"},
+  {word:"견물생심",meaning:"물건을 보면 갖고 싶은 마음이 생김"},
+];
+function numOptions(ans){
+  const set=new Set([ans]);let guard=0;
+  while(set.size<4&&guard<80){let d=ans+ri(-12,12);if(d>=0&&!set.has(d))set.add(d);guard++;}
+  while(set.size<4)set.add(ans+set.size);
+  return shuffle([...set]).map(String);
+}
+function strOptions(answer,pool){
+  const uniq=[...new Set(pool)];const set=new Set([answer]);let guard=0;
+  while(set.size<4&&guard<200){const c=pick(uniq);if(c!==answer)set.add(c);guard++;}
+  return shuffle([...set]);
+}
+function quizMath(){ // CP 낮음: 두자리×한자리·혼합·나눗셈
+  const t=Math.random();let q,ans;
+  if(t<0.38){const a=ri(11,29),b=ri(2,9);ans=a*b;q=`${a} × ${b} = ?`;}
+  else if(t<0.68){const b=ri(2,9),qo=ri(2,9),a=b*qo;ans=qo;q=`${a} ÷ ${b} = ?`;}
+  else{const a=ri(2,9),b=ri(2,9),c=ri(1,20);
+    if(Math.random()<0.5){ans=a*b+c;q=`${a} × ${b} + ${c} = ?`;}
+    else{ans=a*b-c;if(ans<0){ans=a*b+c;q=`${a} × ${b} + ${c} = ?`;}else q=`${a} × ${b} − ${c} = ?`;}}
+  return {q,answer:String(ans),options:numOptions(ans),level:"수학"};
+}
+function quizEnglish(){ // CP 보통: 쉬운 영어 (질문·보기 모두 영어)
+  const item=pick(EN_QUIZ);
+  return {q:item.q,answer:item.a,options:shuffle([...item.opts]),level:"영어"};
+}
+function quizIdiom(){ // CP 높음: 사자성어
+  const it=pick(IDIOMS);
+  const q=`뜻: "${it.meaning}"\n알맞은 사자성어는?`;
+  return {q,answer:it.word,options:strOptions(it.word,IDIOMS.map(x=>x.word)),level:"사자성어"};
+}
+function makeQuiz(cp){
+  if(cp<300)return quizMath();
+  if(cp<1000)return quizEnglish();
+  return quizIdiom();
+}
 function addCollider(mesh,pad=0){mesh.updateWorldMatrix(true,false);const b=new THREE.Box3().setFromObject(mesh);b.expandByScalar(pad);world.colliders.push(b);}
 function nearCollider(x,z,pad){const p=new THREE.Vector3(x,.5,z);for(const b of world.colliders){const bb=b.clone().expandByScalar(pad);if(p.x>bb.min.x&&p.x<bb.max.x&&p.z>bb.min.z&&p.z<bb.max.z)return true;}return false;}
 function collides(x,z){const r=.5;for(const b of world.colliders){if(x>b.min.x-r&&x<b.max.x+r&&z>b.min.z-r&&z<b.max.z+r)return true;}return Math.abs(x)>57||Math.abs(z)>57;}
@@ -342,6 +454,7 @@ function spawnMonsters(n,forceStrong){for(let i=0;i<n;i++){
   if(rare){key="drake";strong=true;}
   else{key=pick(WILD_POOL);strong=forceStrong||Math.random()<.16;}
   const m=buildMonster(key,strong);
+  m.userData.cp=rollCP(SPECIES[key].baseCP,strong);
   let x,z,tries=0;do{x=rand(-50,50);z=rand(-50,50);tries++;}while((Math.hypot(x,z-10)<10||nearCollider(x,z,1.5))&&tries<40);
   m.position.set(x,0,z);m.userData.wander={t:rand(0,6),dir:rand(0,Math.PI*2),speed:rand(.6,1.4),moving:true};
   scene.add(m);world.monsters.push(m);}}
@@ -407,17 +520,43 @@ function pickBall(g){const kind=g.userData.kind;scene.remove(g);world.balls=worl
 
 // ---------- capture ----------
 function startCapture(mon){
-  state.inCapture=true;state.capMon=mon;
+  state.inCapture=true;state.capMon=mon;state.quizBonus=false;state.quizDone=false;
   const key=mon.userData.species,s=SPECIES[key],strong=mon.userData.strong;
   document.getElementById("capName").textContent=`야생 ${strong?"강한 ":""}${s.name} 등장!`;
-  document.getElementById("capName").style.color=BALLS.normal.color==="#"+s.color.toString(16)?"#fff":"#"+s.color.toString(16).padStart(6,"0");
+  document.getElementById("capName").style.color="#"+s.color.toString(16).padStart(6,"0");
+  document.getElementById("capCP").textContent="CP "+mon.userData.cp;
   document.getElementById("capTag").textContent=(strong?"⭐ 강한 개체 — 잡기 어렵다! ":"")+s.type+"타입";
   document.getElementById("capTag").style.color=strong?"#ffd54f":"#c9c0da";
   const cm=document.getElementById("capMon");cm.style.transform="";
-  cm.innerHTML=`<div style="font-size:${strong?120:96}px">${s.emoji}</div>`;
+  cm.innerHTML=`<div style="font-size:${strong?100:84}px">${s.emoji}</div>`;
   document.getElementById("capMsg").textContent="";document.getElementById("capMsg").style.color="#f6f1e7";
-  renderCaptureBalls();
+  document.getElementById("capBalls").style.display="none";
+  buildQuizUI(mon.userData.cp);
   document.getElementById("capture").style.display="flex";
+}
+function buildQuizUI(cp){
+  const quiz=makeQuiz(cp);state.currentQuiz=quiz;
+  const wrap=document.getElementById("capQuiz");wrap.style.display="block";
+  wrap.innerHTML=`<div class="qq">문제를 맞히면 포획 확률이 크게 올라가요! · 유형: ${quiz.level}</div>
+    <div class="quizchar"><div class="prof">🦉</div><div class="bubble">${quiz.q}</div></div>
+    <div class="qopts"></div>`;
+  const optWrap=wrap.querySelector(".qopts");
+  quiz.options.forEach(o=>{
+    const b=document.createElement("button");b.className="pxbtn qopt";b.textContent=o;
+    b.addEventListener("click",()=>answerQuiz(o,quiz.answer,b));optWrap.appendChild(b);
+  });
+}
+function answerQuiz(chosen,answer,btn){
+  if(state.quizDone)return;state.quizDone=true;
+  state.quizBonus=(chosen===String(answer));
+  document.querySelectorAll(".qopt").forEach(b=>{b.disabled=true;
+    if(b.textContent===String(answer))b.classList.add("qok");
+    else if(b===btn)b.classList.add("qbad");});
+  const msg=document.getElementById("capMsg");
+  if(state.quizBonus){msg.style.color="#66bb6a";msg.textContent="정답! 포획 확률 상승 🎯 볼을 던지세요.";}
+  else{msg.style.color="#ffb74d";msg.textContent=`아쉽다! 정답은 "${answer}". 기본 확률로 도전할 수 있어요.`;}
+  document.getElementById("capBalls").style.display="flex";
+  renderCaptureBalls();
 }
 function renderCaptureBalls(){
   const wrap=document.getElementById("capBalls");wrap.innerHTML="";
@@ -433,8 +572,10 @@ function renderCaptureBalls(){
 }
 function catchChance(mon,kind){
   if(kind==="master")return 1;
-  const base=mon.userData.strong?0.30:0.70;
+  let base=mon.userData.strong?0.30:0.70;
+  base*=(1-Math.min(0.35,mon.userData.cp/6000)); // 높은 CP일수록 잡기 어렵게
   let c=base*BALLS[kind].mult;
+  if(state.quizBonus)c+=0.30; // 퀴즈 정답 보너스
   if(partner&&SPECIES[partner].type===SPECIES[mon.userData.species].type)c+=0.10;
   return Math.max(.05,Math.min(.95,c));
 }
@@ -447,17 +588,18 @@ function throwBall(kind){
   let sh=0;const wob=setInterval(()=>{cm.style.transform=`rotate(${(sh%2?1:-1)*8}deg)`;sh++;},160);
   setTimeout(()=>{
     clearInterval(wob);cm.style.transform="";
-    const key=state.capMon.userData.species;
+    const key=state.capMon.userData.species,cp=state.capMon.userData.cp;
     const success=Math.random()<catchChance(state.capMon,kind);
-    if(success){msg.style.color="#66bb6a";msg.textContent=`잡았다! ${SPECIES[key].name}을(를) 포획!`;captureSuccess(state.capMon);setTimeout(closeCapture,1500);}
+    if(success){msg.style.color="#66bb6a";msg.textContent=`잡았다! ${SPECIES[key].name} (CP ${cp}) 포획!`;captureSuccess(state.capMon);setTimeout(closeCapture,1600);}
     else{msg.style.color="#ef5350";
       if(totalBalls()>0){msg.textContent="아쉽다! 볼에서 튀어나왔다. 다시 던져보자.";renderCaptureBalls();}
       else{msg.textContent="놓쳤다… 볼이 다 떨어졌어요.";setTimeout(closeCapture,1500);}}
     saveGame();
   },1400);
 }
-function captureSuccess(mon){const key=mon.userData.species;
-  state.captured[key]=(state.captured[key]||0)+1;
+function captureSuccess(mon){const key=mon.userData.species,cp=mon.userData.cp;
+  const e=state.captured[key]||{count:0,best:0};
+  e.count++;e.best=Math.max(e.best,cp);state.captured[key]=e;
   document.getElementById("dexCount").textContent=Object.keys(state.captured).length;
   scene.remove(mon);world.monsters=world.monsters.filter(m=>m!==mon);
   saveGame();setTimeout(()=>spawnMonsters(1),3000);}
@@ -474,10 +616,11 @@ function updateBag(){
   });
 }
 function renderDex(){const grid=document.getElementById("dexGrid");grid.innerHTML="";
-  Object.keys(SPECIES).forEach(key=>{const s=SPECIES[key];const cnt=state.captured[key]||0;
+  Object.keys(SPECIES).forEach(key=>{const s=SPECIES[key];const e=state.captured[key];const cnt=e?e.count:0;
     const cell=document.createElement("div");cell.className="dexcell"+(cnt?"":" empty");
     cell.innerHTML=`<div class="swatch" style="background:#${s.color.toString(16).padStart(6,"0")}">${cnt?s.emoji:"❔"}</div>
-      <div class="nm">${cnt?s.name:"？？？"}</div><div class="ct">${cnt?("보유 "+cnt+" · "+s.type+"타입"):"미포획"}</div>`;
+      <div class="nm">${cnt?s.name:"？？？"}</div><div class="ct">${cnt?("보유 "+cnt+" · 최고 CP "+e.best):"미포획"}</div>
+      <div class="ct" style="opacity:.7">${cnt?s.type+"타입":""}</div>`;
     grid.appendChild(cell);});}
 let toastTimer=null;
 function toast(txt){const t=document.getElementById("toast");t.textContent=txt;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2200);}
@@ -534,7 +677,7 @@ function updateProximity(){const p=player.position;
   let nm=null,nmd=2.6;world.monsters.forEach(m=>{const d=m.position.distanceTo(p);if(d<nmd){nmd=d;nm=m;}});state.nearMon=nm;
   const prompt=document.getElementById("prompt"),act=state.isMobile?"[행동]":"[E / 클릭]";
   if(nm){const s=SPECIES[nm.userData.species],st=nm.userData.strong?"강한 ":"";
-    prompt.innerHTML=totalBalls()>0?`야생 <b>${st}${s.name}</b> · ${act} 잡기`:`야생 <b>${st}${s.name}</b> · 볼이 없어요`;prompt.style.display="block";}
+    prompt.innerHTML=totalBalls()>0?`야생 <b>${st}${s.name}</b> (CP ${nm.userData.cp}) · ${act} 잡기`:`야생 <b>${st}${s.name}</b> (CP ${nm.userData.cp}) · 볼이 없어요`;prompt.style.display="block";}
   else if(nb){prompt.innerHTML=`${BALLS[nb.userData.kind].name} 발견! ${act} 줍기`;prompt.style.display="block";}
   else prompt.style.display="none";}
 function updateCamera(){if(!player)return;const dist=7,height=4;
@@ -562,7 +705,9 @@ function enterGame(){
 }
 function applySave(sv){
   partner=sv.partner||"leaf";
-  state.captured=sv.captured||{};
+  const raw=sv.captured||{};const norm={};
+  for(const k in raw){const v=raw[k];norm[k]=(typeof v==="number")?{count:v,best:0}:{count:v.count||0,best:v.best||0};}
+  state.captured=norm;
   state.balls=Object.assign({normal:0,super:0,hyper:0,master:0},sv.balls||{});
   state.yaw=sv.yaw||0;
   if(sv.pos)player.position.set(sv.pos.x,0,sv.pos.z);
@@ -593,7 +738,7 @@ function init(){
 }
 function buildPartnerCards(){const wrap=document.getElementById("partners");
   ["leaf","ember","aqua"].forEach(key=>{const s=SPECIES[key];const c=document.createElement("div");c.className="pcard";c.dataset.key=key;
-    c.innerHTML=`<div class="art" style="background:#${s.color.toString(16).padStart(6,"0")}22"><div style="font-size:72px">${s.emoji}</div></div>
+    c.innerHTML=`<div class="art" style="background:#${s.color.toString(16).padStart(6,"0")}22"><div class="emj">${s.emoji}</div></div>
       <div class="pname">${s.name}</div><span class="ptype ${s.tclass}">${s.type}타입</span><div class="pdesc">${s.desc}</div>`;
     c.addEventListener("click",()=>{document.querySelectorAll(".pcard").forEach(x=>x.classList.remove("sel"));c.classList.add("sel");partner=key;document.getElementById("startBtn").classList.add("ready");});
     wrap.appendChild(c);});}
@@ -606,7 +751,18 @@ window.addEventListener("DOMContentLoaded",()=>{
 
   document.getElementById("startBtn").addEventListener("click",()=>{if(partner)newGame();});
   document.getElementById("resumeBtn").addEventListener("click",()=>{const s=loadSave();if(s){applySave(s);}enterGame();});
-  document.getElementById("newBtn").addEventListener("click",()=>{if(confirm("저장된 모험을 지우고 처음부터 시작할까요?")){clearSave();partner=null;document.querySelectorAll(".pcard").forEach(x=>x.classList.remove("sel"));document.getElementById("startBtn").classList.remove("ready");showTitle(false);}});
+  document.getElementById("newBtn").addEventListener("click",()=>{
+    // native confirm()이 일부 모바일 브라우저에서 무시되어 무반응처럼 보이던 문제 →
+    // 파트너 선택 화면으로 바로 이동(저장은 '모험 시작' 시 newGame()에서 초기화되므로 안전).
+    partner=null;document.querySelectorAll(".pcard").forEach(x=>x.classList.remove("sel"));
+    document.getElementById("startBtn").classList.remove("ready");
+    showTitle(false);
+    document.getElementById("backToResume").style.display="inline-block";
+  });
+  document.getElementById("backToResume").addEventListener("click",()=>{
+    document.getElementById("backToResume").style.display="none";
+    showTitle(true);
+  });
 
   document.getElementById("menuBtn").addEventListener("click",toggleMenu);
   document.getElementById("mResume").addEventListener("click",toggleMenu);

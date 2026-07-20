@@ -72,7 +72,7 @@
   #menu .pxbtn{display:block;width:100%;margin:10px 0;font-size:16px;}
 
   /* ---------- Capture ---------- */
-  #capture{position:fixed;inset:0;z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,rgba(60,40,90,.55),rgba(8,6,14,.92));padding:20px;text-align:center;overflow-y:auto;}
+  #capture{position:fixed;inset:0;z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 32%,#3a2b52,#120d1e);padding:20px;text-align:center;overflow-y:auto;}
   #capName{font-weight:900;font-size:24px;margin-bottom:4px;text-shadow:0 2px 0 #000;}
   #capCP{font-weight:900;font-size:18px;color:#ffd54f;margin-bottom:6px;text-shadow:0 2px 0 #000;}
   #capTag{font-weight:800;font-size:14px;margin-bottom:10px;min-height:18px;}
@@ -85,7 +85,9 @@
   #capQuiz .bubble{position:relative;background:#fff;color:#1a1a1a;border-radius:14px;padding:12px 16px;font-weight:800;font-size:16px;max-width:320px;text-align:left;box-shadow:0 4px 0 rgba(0,0,0,.25);white-space:pre-line;line-height:1.35;}
   #capQuiz .bubble::after{content:"";position:absolute;left:-11px;bottom:16px;border:7px solid transparent;border-right-color:#fff;}
   #capQuiz .qopts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
-  .qopt{font-size:17px;font-weight:900;padding:13px 8px;line-height:1.2;}
+  .qopt{font-size:17px;font-weight:900;padding:14px 8px;line-height:1.2;
+    background:linear-gradient(180deg,#4a3f68,#332a49);border:2px solid rgba(255,255,255,.28);
+    border-bottom:5px solid rgba(0,0,0,.5);box-shadow:0 3px 0 rgba(0,0,0,.3);}
   .qopt.qok{background:linear-gradient(180deg,#8be08b,#43a047);color:#0c2b0c;border-color:#fff5;}
   .qopt.qbad{background:linear-gradient(180deg,#ff8a80,#e53935);color:#3a0000;border-color:#fff5;}
   #capBalls{display:none;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
@@ -105,6 +107,20 @@
   .dexcell .swatch{width:100%;height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:32px;}
   .dexcell .nm{font-weight:800;margin-top:8px;font-size:13px;} .dexcell .ct{font-size:11px;color:#c9c0da;}
   #dexClose{margin-top:16px;}
+
+  /* ---------- My Pokemon (individual list) ---------- */
+  #mine{position:fixed;inset:0;z-index:36;display:none;align-items:center;justify-content:center;background:rgba(8,6,14,.85);padding:20px;}
+  #mine .box{background:var(--panel);border-radius:16px;padding:20px;max-width:640px;width:100%;max-height:82vh;overflow:auto;border:2px solid rgba(255,255,255,.1);}
+  #mine h2{margin-bottom:4px;} #mine .mineTot{font-size:14px;color:#c9c0da;font-weight:700;}
+  #mine .sub{color:#c9c0da;font-size:13px;margin-bottom:14px;}
+  .minegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;}
+  .minecell{background:var(--panel-2);border-radius:12px;padding:10px 8px;text-align:center;border:2px solid rgba(255,255,255,.06);}
+  .minecell .mswatch{width:100%;height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;}
+  .minecell .mnm{font-weight:800;margin-top:6px;font-size:12px;}
+  .minecell .mcp{font-weight:900;font-size:14px;color:var(--gold);margin-top:2px;}
+  .minecell .mtp{font-size:10px;color:#c9c0da;opacity:.8;}
+  .mineEmpty{grid-column:1/-1;opacity:.75;padding:24px 8px;line-height:1.6;font-weight:700;}
+  #mineClose{margin-top:16px;}
 
   /* ---------- Mobile ---------- */
   #touch{position:fixed;inset:0;z-index:22;display:none;pointer-events:none;}
@@ -154,6 +170,7 @@
   <div class="box">
     <h2>메뉴</h2>
     <button class="pxbtn" id="mResume">계속하기</button>
+    <button class="pxbtn" id="mMine">🎒 내 포켓몬</button>
     <button class="pxbtn" id="mDex">📕 도감</button>
     <button class="pxbtn" id="mHome">🏠 집으로 돌아가기</button>
     <button class="pxbtn" id="mHelp">❔ 조작법</button>
@@ -180,6 +197,16 @@
     <div class="sub">이 세계에서 만날 수 있는 몬스터들</div>
     <div class="dexgrid" id="dexGrid"></div>
     <button class="pxbtn" id="dexClose">닫기</button>
+  </div>
+</div>
+
+<!-- My Pokemon (individual list) -->
+<div id="mine">
+  <div class="box">
+    <h2>내 포켓몬 <span class="mineTot">(<span id="mineCount">0</span>마리)</span></h2>
+    <div class="sub">지금까지 잡은 모든 몬스터 · CP 높은 순</div>
+    <div class="minegrid" id="mineGrid"></div>
+    <button class="pxbtn" id="mineClose">닫기</button>
   </div>
 </div>
 
@@ -598,8 +625,8 @@ function throwBall(kind){
   },1400);
 }
 function captureSuccess(mon){const key=mon.userData.species,cp=mon.userData.cp;
-  const e=state.captured[key]||{count:0,best:0};
-  e.count++;e.best=Math.max(e.best,cp);state.captured[key]=e;
+  const e=state.captured[key]||{cps:[]};
+  e.cps.push(cp);state.captured[key]=e; // 개체별 CP를 하나하나 기록
   document.getElementById("dexCount").textContent=Object.keys(state.captured).length;
   scene.remove(mon);world.monsters=world.monsters.filter(m=>m!==mon);
   saveGame();setTimeout(()=>spawnMonsters(1),3000);}
@@ -616,11 +643,25 @@ function updateBag(){
   });
 }
 function renderDex(){const grid=document.getElementById("dexGrid");grid.innerHTML="";
-  Object.keys(SPECIES).forEach(key=>{const s=SPECIES[key];const e=state.captured[key];const cnt=e?e.count:0;
+  Object.keys(SPECIES).forEach(key=>{const s=SPECIES[key];const e=state.captured[key];
+    const cps=e?(e.cps||[]):[];const cnt=cps.length;const best=cnt?Math.max.apply(null,cps):0;
     const cell=document.createElement("div");cell.className="dexcell"+(cnt?"":" empty");
     cell.innerHTML=`<div class="swatch" style="background:#${s.color.toString(16).padStart(6,"0")}">${cnt?s.emoji:"❔"}</div>
-      <div class="nm">${cnt?s.name:"？？？"}</div><div class="ct">${cnt?("보유 "+cnt+" · 최고 CP "+e.best):"미포획"}</div>
+      <div class="nm">${cnt?s.name:"？？？"}</div><div class="ct">${cnt?("보유 "+cnt+" · 최고 CP "+best):"미포획"}</div>
       <div class="ct" style="opacity:.7">${cnt?s.type+"타입":""}</div>`;
+    grid.appendChild(cell);});}
+function renderMine(){const grid=document.getElementById("mineGrid");grid.innerHTML="";
+  const items=[];
+  Object.keys(state.captured).forEach(key=>{const cps=(state.captured[key].cps)||[];
+    cps.forEach((cp,i)=>items.push({key,cp,i}));});
+  items.sort((a,b)=>b.cp-a.cp);
+  document.getElementById("mineCount").textContent=items.length;
+  if(!items.length){grid.innerHTML='<div class="mineEmpty">아직 잡은 몬스터가 없어요.<br>숲을 탐험하며 몬스터를 잡아보세요!</div>';return;}
+  items.forEach(it=>{const s=SPECIES[it.key];
+    const cell=document.createElement("div");cell.className="minecell";
+    cell.innerHTML=`<div class="mswatch" style="background:#${s.color.toString(16).padStart(6,"0")}">${s.emoji}</div>
+      <div class="mnm">${s.name}</div><div class="mcp">CP ${it.cp||"?"}</div>
+      <div class="mtp">${s.type}타입</div>`;
     grid.appendChild(cell);});}
 let toastTimer=null;
 function toast(txt){const t=document.getElementById("toast");t.textContent=txt;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2200);}
@@ -706,7 +747,12 @@ function enterGame(){
 function applySave(sv){
   partner=sv.partner||"leaf";
   const raw=sv.captured||{};const norm={};
-  for(const k in raw){const v=raw[k];norm[k]=(typeof v==="number")?{count:v,best:0}:{count:v.count||0,best:v.best||0};}
+  for(const k in raw){const v=raw[k];
+    if(typeof v==="number"){norm[k]={cps:Array(Math.max(0,v)).fill(0)};} // 아주 옛 저장(수량만)
+    else if(v&&Array.isArray(v.cps)){norm[k]={cps:v.cps.slice()};}       // 신규 형식(개체별 CP)
+    else{const cnt=(v&&v.count)||0,best=(v&&v.best)||0;const cps=[];       // 이전 형식(수량+최고CP)
+      for(let i=0;i<cnt;i++)cps.push(i===0?best:0);norm[k]={cps};}
+  }
   state.captured=norm;
   state.balls=Object.assign({normal:0,super:0,hyper:0,master:0},sv.balls||{});
   state.yaw=sv.yaw||0;
@@ -766,6 +812,7 @@ window.addEventListener("DOMContentLoaded",()=>{
 
   document.getElementById("menuBtn").addEventListener("click",toggleMenu);
   document.getElementById("mResume").addEventListener("click",toggleMenu);
+  document.getElementById("mMine").addEventListener("click",()=>{document.getElementById("menu").style.display="none";renderMine();document.getElementById("mine").style.display="flex";});
   document.getElementById("mDex").addEventListener("click",()=>{document.getElementById("menu").style.display="none";renderDex();document.getElementById("dex").style.display="flex";});
   document.getElementById("mHome").addEventListener("click",goHome);
   document.getElementById("mExit").addEventListener("click",goToMain);
@@ -773,6 +820,7 @@ window.addEventListener("DOMContentLoaded",()=>{
 
   document.getElementById("capRun").addEventListener("click",closeCapture);
   document.getElementById("dexClose").addEventListener("click",()=>document.getElementById("dex").style.display="none");
+  document.getElementById("mineClose").addEventListener("click",()=>document.getElementById("mine").style.display="none");
 });
 
 })();

@@ -25,28 +25,26 @@
 
   /* ---------- Title / Partner select ---------- */
   #overlay{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:linear-gradient(180deg,#8fd3ff 0%,#bfe9ff 45%,#ffe6b3 100%);text-align:center;padding:16px;overflow-y:auto;}
-  #overlay h1{font-size:clamp(26px,6vw,64px);color:#fff;line-height:1.05;text-shadow:0 3px 0 #2b6cff,0 6px 12px rgba(0,0,0,.25);letter-spacing:1px;}
-  #overlay p.sub{margin-top:8px;color:#274b6d;font-weight:700;font-size:clamp(12px,2.6vw,18px);}
+    background:linear-gradient(180deg,#8fd3ff 0%,#bfe9ff 45%,#ffe6b3 100%);text-align:center;padding:24px;overflow:auto;}
+  #overlay h1{font-size:clamp(30px,7vw,64px);color:#fff;line-height:1.05;text-shadow:0 3px 0 #2b6cff,0 6px 12px rgba(0,0,0,.25);letter-spacing:1px;}
   #overlay h1 span{color:var(--gold);text-shadow:0 3px 0 #b26a00,0 6px 12px rgba(0,0,0,.25);}
-  .stage{margin-top:12px;background:rgba(43,36,56,.82);border-radius:18px;padding:clamp(14px,3vw,22px);max-width:760px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3);}
-  .stage h2{font-size:clamp(16px,4vw,20px);margin-bottom:4px;}
-  .stage .hint{color:#c9c0da;font-size:clamp(11px,2.6vw,13px);margin-bottom:14px;}
+  #overlay p.sub{margin-top:10px;color:#274b6d;font-weight:700;font-size:clamp(14px,2.6vw,18px);}
+  .stage{margin-top:12px;background:rgba(43,36,56,.82);border-radius:18px;padding:22px;max-width:760px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3);}
+  .stage h2{font-size:20px;margin-bottom:4px;}
+  .stage .hint{color:#c9c0da;font-size:13px;margin-bottom:16px;}
   #resumeRow{display:none;flex-direction:column;gap:10px;align-items:center;margin-bottom:8px;}
   #resumeBtn{font-size:20px;padding:14px 34px;background:linear-gradient(180deg,#8be08b,#43a047);color:#0c2b0c;border-color:#fff5;}
   #newBtn{font-size:13px;background:transparent;border:none;color:#c9c0da;text-decoration:underline;cursor:pointer;font-family:inherit;}
-  #backToResume{display:none;font-size:13px;background:transparent;border:none;color:#c9c0da;text-decoration:underline;cursor:pointer;font-family:inherit;margin-bottom:10px;}
-  .partners{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,2vw,14px);justify-content:center;}
-  .pcard{width:100%;background:var(--panel-2);border:2px solid rgba(255,255,255,.08);border-radius:14px;padding:clamp(8px,2vw,14px);cursor:pointer;transition:transform .12s,border-color .12s,box-shadow .12s;}
+  .partners{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .pcard{width:190px;background:var(--panel-2);border:2px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;cursor:pointer;transition:transform .12s,border-color .12s,box-shadow .12s;}
   .pcard:hover{transform:translateY(-4px);}
   .pcard.sel{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,207,77,.35);}
-  .pcard .art{height:clamp(64px,16vw,120px);border-radius:10px;display:flex;align-items:center;justify-content:center;}
-  .pcard .art .emj{font-size:clamp(38px,10vw,72px);line-height:1;}
-  .pcard .pname{font-weight:800;margin-top:8px;font-size:clamp(13px,3vw,17px);}
-  .pcard .ptype{display:inline-block;margin-top:6px;font-size:clamp(10px,2.4vw,12px);font-weight:700;padding:3px 10px;border-radius:20px;}
-  .pcard .pdesc{font-size:clamp(10px,2.3vw,12px);color:#c9c0da;margin-top:8px;line-height:1.4;}
+  .pcard .art{height:120px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
+  .pcard .pname{font-weight:800;margin-top:10px;font-size:17px;}
+  .pcard .ptype{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;}
+  .pcard .pdesc{font-size:12px;color:#c9c0da;margin-top:8px;line-height:1.4;}
   .t-leaf{background:var(--leaf);} .t-ember{background:var(--ember);} .t-aqua{background:var(--aqua);}
-  #startBtn{margin-top:16px;font-size:clamp(15px,3.6vw,18px);padding:12px 30px;opacity:.4;pointer-events:none;}
+  #startBtn{margin-top:18px;font-size:18px;padding:12px 30px;opacity:.4;pointer-events:none;}
   #startBtn.ready{opacity:1;pointer-events:auto;background:linear-gradient(180deg,#ffd766,#f5a623);color:#3a2600;border-color:#fff3;}
 
   /* ---------- HUD ---------- */
@@ -57,8 +55,10 @@
   .bdot::before{content:"";position:absolute;left:-2px;right:-2px;top:50%;height:2px;background:#1a1a1a;transform:translateY(-1px);}
   #dexBadge{background:rgba(43,36,56,.8);border:2px solid rgba(255,255,255,.12);border-radius:10px;padding:5px 9px;font-weight:800;font-size:13px;}
   #topRight{position:absolute;top:12px;right:12px;display:flex;gap:8px;pointer-events:auto;}
-  #topRight .pxbtn{padding:8px 12px;font-size:13px;}
-  #compass{position:absolute;top:58px;left:50%;transform:translateX(-50%);background:rgba(43,36,56,.7);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;letter-spacing:2px;}
+  .iconbtn{font-family:inherit;font-weight:800;font-size:18px;color:var(--ink);background:rgba(43,36,56,.82);border:2px solid rgba(255,255,255,.14);border-bottom:3px solid rgba(0,0,0,.4);border-radius:12px;min-width:44px;height:44px;padding:0 8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:2px;}
+  .iconbtn:active{transform:translateY(2px);}
+  .iconbtn span{font-size:12px;font-weight:900;}
+  #compass{position:absolute;top:64px;left:50%;transform:translateX(-50%);background:rgba(43,36,56,.7);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;letter-spacing:2px;}
   #cross{position:absolute;left:50%;top:50%;width:8px;height:8px;border:2px solid rgba(255,255,255,.7);border-radius:50%;transform:translate(-50%,-50%);}
   #prompt{position:absolute;left:50%;bottom:210px;transform:translateX(-50%);background:rgba(43,36,56,.9);border-radius:10px;padding:8px 16px;font-weight:800;font-size:14px;display:none;border:2px solid rgba(255,255,255,.2);text-align:center;}
   #prompt b{color:var(--gold);}
@@ -67,9 +67,14 @@
 
   /* ---------- Pause menu ---------- */
   #menu{position:fixed;inset:0;z-index:38;display:none;align-items:center;justify-content:center;background:rgba(8,6,14,.8);}
-  #menu .box{background:var(--panel);border-radius:16px;padding:24px;width:min(340px,90vw);text-align:center;border:2px solid rgba(255,255,255,.1);}
+  #menu .box{background:var(--panel);border-radius:16px;padding:22px;width:min(360px,92vw);text-align:center;border:2px solid rgba(255,255,255,.1);}
   #menu h2{margin-bottom:16px;}
-  #menu .pxbtn{display:block;width:100%;margin:10px 0;font-size:16px;}
+  .menugrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+  .mtile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 6px;font-size:14px;}
+  .mtile .ic{font-size:30px;line-height:1;}
+  .menurow{display:flex;gap:8px;margin-bottom:12px;}
+  .menurow .small{flex:1;padding:10px 4px;font-size:12px;}
+  #mResume{display:block;width:100%;font-size:16px;}
 
   /* ---------- Capture ---------- */
   #capture{position:fixed;inset:0;z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 32%,#3a2b52,#120d1e);padding:20px;text-align:center;overflow-y:auto;}
@@ -122,6 +127,39 @@
   .mineEmpty{grid-column:1/-1;opacity:.75;padding:24px 8px;line-height:1.6;font-weight:700;}
   #mineClose{margin-top:16px;}
 
+  /* ---------- In-page confirm ---------- */
+  #confirm{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(8,6,14,.82);padding:20px;}
+  #confirm .box{background:var(--panel);border-radius:16px;padding:24px;width:min(340px,92vw);text-align:center;border:2px solid rgba(255,255,255,.1);}
+  #confirmMsg{font-weight:800;font-size:16px;line-height:1.5;margin-bottom:18px;}
+  .confirmBtns{display:flex;gap:10px;}
+  .confirmBtns .pxbtn{flex:1;font-size:15px;}
+  #confirmYes{background:linear-gradient(180deg,#ff8a80,#e53935);color:#3a0000;border-color:#fff5;}
+
+  /* ---------- Generic panel ---------- */
+  #panel{position:fixed;inset:0;z-index:36;display:none;align-items:center;justify-content:center;background:rgba(8,6,14,.85);padding:20px;}
+  #panel .box{background:var(--panel);border-radius:16px;padding:20px;max-width:560px;width:100%;max-height:82vh;overflow:auto;border:2px solid rgba(255,255,255,.1);}
+  #panel h2{margin-bottom:4px;} #panel .sub{color:#c9c0da;font-size:13px;margin-bottom:14px;}
+  #panelClose{margin-top:16px;}
+  .mrow{background:var(--panel-2);border-radius:12px;padding:12px 14px;margin-bottom:10px;border:2px solid rgba(255,255,255,.06);}
+  .mrow .mtop{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:800;}
+  .mrow .mdesc{font-size:14px;}
+  .mrow .mprog{font-size:12px;color:#c9c0da;margin-top:6px;}
+  .mbar{height:9px;background:rgba(0,0,0,.35);border-radius:6px;margin-top:6px;overflow:hidden;}
+  .mbar>span{display:block;height:100%;background:linear-gradient(90deg,#8be08b,#43a047);}
+  .mclaim{font-size:12px;padding:7px 12px;}
+  .mdone{color:#8be08b;font-weight:900;font-size:13px;}
+  .statrow{display:flex;justify-content:space-between;padding:10px 12px;background:var(--panel-2);border-radius:10px;margin-bottom:8px;font-weight:700;}
+  .statrow b{color:var(--gold);}
+  .statbar{height:8px;background:rgba(0,0,0,.35);border-radius:6px;margin-top:6px;overflow:hidden;}
+  .statbar>span{display:block;height:100%;background:linear-gradient(90deg,#64b5f6,#1e88e5);}
+  .decorgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;}
+  .decorcell{background:var(--panel-2);border-radius:12px;padding:10px;text-align:center;border:2px solid rgba(255,255,255,.06);}
+  .decorcell .em{font-size:30px;} .decorcell .nm{font-weight:800;font-size:13px;margin:4px 0;}
+  .decorcell .btns{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+  .decorcell .mini{font-size:11px;padding:6px;}
+  .mini.on{background:linear-gradient(180deg,#8be08b,#43a047);color:#0c2b0c;border-color:#fff5;}
+  .mini.buddy{background:linear-gradient(180deg,#ffd766,#f5a623);color:#3a2600;border-color:#fff5;}
+
   /* ---------- Mobile ---------- */
   #touch{position:fixed;inset:0;z-index:22;display:none;pointer-events:none;}
   #joy{position:absolute;left:22px;bottom:22px;width:130px;height:130px;border-radius:50%;background:rgba(43,36,56,.4);border:2px solid rgba(255,255,255,.2);pointer-events:auto;touch-action:none;}
@@ -143,7 +181,6 @@
       <button id="newBtn">처음부터 새로 시작</button>
     </div>
     <div id="newGameArea">
-      <button id="backToResume">← 이어하기로 돌아가기</button>
       <h2>파트너를 선택하세요</h2>
       <div class="hint">가장 먼저 함께 모험을 떠날 친구를 골라주세요.</div>
       <div class="partners" id="partners"></div>
@@ -156,8 +193,9 @@
 <div id="hud">
   <div id="bag"></div>
   <div id="topRight">
-    <div id="dexBadge">📕 <span id="dexCount">0</span></div>
-    <button class="pxbtn" id="menuBtn">☰ 메뉴</button>
+    <button class="iconbtn" id="missionQuick" title="오늘의 미션">📋</button>
+    <button class="iconbtn" id="dexQuick" title="도감">📕<span id="dexCount">0</span></button>
+    <button class="iconbtn" id="menuBtn" title="메뉴">☰</button>
   </div>
   <div id="compass">N</div>
   <div id="cross"></div>
@@ -169,12 +207,29 @@
 <div id="menu">
   <div class="box">
     <h2>메뉴</h2>
+    <div class="menugrid">
+      <button class="pxbtn mtile" id="mMission"><span class="ic">📋</span>오늘의 미션</button>
+      <button class="pxbtn mtile" id="mStats"><span class="ic">📊</span>퀴즈 통계</button>
+      <button class="pxbtn mtile" id="mDex"><span class="ic">📕</span>도감</button>
+      <button class="pxbtn mtile" id="mMine"><span class="ic">🎒</span>내 포켓몬</button>
+      <button class="pxbtn mtile" id="mDecor"><span class="ic">🏡</span>집 꾸미기</button>
+    </div>
+    <div class="menurow">
+      <button class="pxbtn small" id="mHome">🏠 집으로</button>
+      <button class="pxbtn small" id="mHelp">❔ 조작법</button>
+      <button class="pxbtn small" id="mExit">🚪 메인으로</button>
+    </div>
     <button class="pxbtn" id="mResume">계속하기</button>
-    <button class="pxbtn" id="mMine">🎒 내 포켓몬</button>
-    <button class="pxbtn" id="mDex">📕 도감</button>
-    <button class="pxbtn" id="mHome">🏠 집으로 돌아가기</button>
-    <button class="pxbtn" id="mHelp">❔ 조작법</button>
-    <button class="pxbtn" id="mExit">🚪 메인으로 나가기</button>
+  </div>
+</div>
+
+<!-- Generic panel (missions / stats / decorate) -->
+<div id="panel">
+  <div class="box">
+    <h2 id="panelTitle"></h2>
+    <div class="sub" id="panelSub"></div>
+    <div id="panelBody"></div>
+    <button class="pxbtn" id="panelClose">닫기</button>
   </div>
 </div>
 
@@ -190,16 +245,6 @@
   <button id="capRun">도망가기</button>
 </div>
 
-<!-- Dex -->
-<div id="dex">
-  <div class="box">
-    <h2>몬스터 도감</h2>
-    <div class="sub">이 세계에서 만날 수 있는 몬스터들</div>
-    <div class="dexgrid" id="dexGrid"></div>
-    <button class="pxbtn" id="dexClose">닫기</button>
-  </div>
-</div>
-
 <!-- My Pokemon (individual list) -->
 <div id="mine">
   <div class="box">
@@ -210,11 +255,32 @@
   </div>
 </div>
 
+<!-- Dex -->
+<div id="dex">
+  <div class="box">
+    <h2>몬스터 도감</h2>
+    <div class="sub">이 세계에서 만날 수 있는 몬스터들</div>
+    <div class="dexgrid" id="dexGrid"></div>
+    <button class="pxbtn" id="dexClose">닫기</button>
+  </div>
+</div>
+
 <!-- Mobile -->
 <div id="touch">
   <div id="joy"><div id="joyNub"></div></div>
   <div id="look"></div>
   <button id="actBtn">행동</button>
+</div>
+
+<!-- In-page confirm (native confirm()이 일부 모바일에서 무시되는 문제 대응) -->
+<div id="confirm">
+  <div class="box">
+    <div id="confirmMsg"></div>
+    <div class="confirmBtns">
+      <button class="pxbtn" id="confirmNo">아니요</button>
+      <button class="pxbtn" id="confirmYes">네</button>
+    </div>
+  </div>
 </div>
 
 <!-- three.js r128 (inlined for offline / CDN-blocked use) -->
@@ -269,7 +335,9 @@ const state={
   balls:{normal:0,super:0,hyper:0,master:0},
   captured:{}, yaw:0, pitch:0.25, keys:{}, moveVec:{x:0,y:0},
   nearBall:null, nearMon:null, inCapture:false, capMon:null,
-  quizBonus:false, quizDone:false, currentQuiz:null,
+  quizBonus:false, quizDone:false, currentQuiz:null, misses:0,
+  stats:{math:{a:0,c:0},english:{a:0,c:0},idiom:{a:0,c:0}},
+  missions:[], missionDate:"", showcase:[],
   ballTimer:16, saveTimer:5,
   isMobile:/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>0)||('ontouchstart' in window)
 };
@@ -312,6 +380,39 @@ const EN_QUIZ=[
   {q:"A bee makes ___.",a:"honey",opts:["honey","milk","bread","juice"]},
   {q:"Fish live in the ___.",a:"water",opts:["water","sky","tree","fire"]},
   {q:"Which one can fly?",a:"bird",opts:["bird","dog","fish","cat"]},
+  {q:"What color is a banana?",a:"yellow",opts:["yellow","blue","black","purple"]},
+  {q:"What color is snow?",a:"white",opts:["white","green","red","brown"]},
+  {q:"Which animal says \"meow\"?",a:"cat",opts:["cat","dog","cow","pig"]},
+  {q:"Which animal says \"quack\"?",a:"duck",opts:["duck","cat","lion","bear"]},
+  {q:"How many days are in a week?",a:"seven",opts:["seven","five","ten","three"]},
+  {q:"We smell with our ___.",a:"nose",opts:["nose","ears","hands","knees"]},
+  {q:"The opposite of \"up\" is ___.",a:"down",opts:["down","left","fast","hot"]},
+  {q:"The opposite of \"open\" is ___.",a:"close",opts:["close","jump","run","sing"]},
+  {q:"The opposite of \"day\" is ___.",a:"night",opts:["night","sun","week","noon"]},
+  {q:"The opposite of \"old\" is ___.",a:"new",opts:["new","tall","warm","slow"]},
+  {q:"A cow gives us ___.",a:"milk",opts:["milk","honey","eggs","wool"]},
+  {q:"A hen gives us ___.",a:"eggs",opts:["eggs","milk","honey","bread"]},
+  {q:"Which one is a color?",a:"purple",opts:["purple","run","chair","seven"]},
+  {q:"Which one is a number?",a:"eight",opts:["eight","apple","blue","dog"]},
+  {q:"We wear shoes on our ___.",a:"feet",opts:["feet","head","hands","nose"]},
+  {q:"We wear a hat on our ___.",a:"head",opts:["head","feet","knees","ears"]},
+  {q:"Which is a fruit?",a:"grape",opts:["grape","desk","train","cloud"]},
+  {q:"Which is a vegetable?",a:"carrot",opts:["carrot","apple","chair","shoe"]},
+  {q:"Ice is very ___.",a:"cold",opts:["cold","hot","happy","tall"]},
+  {q:"Fire is very ___.",a:"hot",opts:["hot","cold","blue","slow"]},
+  {q:"A fish can ___.",a:"swim",opts:["swim","fly","drive","read"]},
+  {q:"A bird can ___.",a:"fly",opts:["fly","dig","drive","cook"]},
+  {q:"We read a ___.",a:"book",opts:["book","spoon","shoe","rock"]},
+  {q:"We sleep in a ___.",a:"bed",opts:["bed","car","tree","pool"]},
+  {q:"Two plus three is ___.",a:"five",opts:["five","four","six","two"]},
+  {q:"Ten minus one is ___.",a:"nine",opts:["nine","ten","eight","one"]},
+  {q:"Which letter comes after \"B\"?",a:"C",opts:["C","A","D","Z"]},
+  {q:"Which is the first month?",a:"January",opts:["January","March","July","May"]},
+  {q:"Rabbits like to eat ___.",a:"carrots",opts:["carrots","meat","rocks","paper"]},
+  {q:"The sky at night is ___.",a:"dark",opts:["dark","bright","green","hot"]},
+  {q:"We use ears to ___.",a:"hear",opts:["hear","see","walk","eat"]},
+  {q:"A frog can ___.",a:"jump",opts:["jump","fly","swim fast","drive"]},
+  {q:"Bread is made from ___.",a:"flour",opts:["flour","rocks","glass","paper"]},
 ];
 const IDIOMS=[
   {word:"일석이조",meaning:"한 가지 일로 두 가지 이익을 얻음"},
@@ -334,6 +435,27 @@ const IDIOMS=[
   {word:"금상첨화",meaning:"좋은 일에 또 좋은 일이 더해짐"},
   {word:"백발백중",meaning:"무슨 일이든 틀림없이 다 들어맞음"},
   {word:"견물생심",meaning:"물건을 보면 갖고 싶은 마음이 생김"},
+  {word:"이심전심",meaning:"마음과 마음으로 서로 뜻이 통함"},
+  {word:"주경야독",meaning:"낮에는 일하고 밤에는 공부함"},
+  {word:"과유불급",meaning:"지나친 것은 모자란 것만 못함"},
+  {word:"임기응변",meaning:"그때그때 형편에 맞게 재빨리 대처함"},
+  {word:"타산지석",meaning:"남의 잘못을 보고 나를 바로잡는 교훈으로 삼음"},
+  {word:"동병상련",meaning:"같은 처지의 사람끼리 서로 가엾게 여김"},
+  {word:"역지사지",meaning:"처지를 바꾸어 상대편의 입장에서 생각함"},
+  {word:"금시초문",meaning:"이제야 비로소 처음 들음"},
+  {word:"우유부단",meaning:"망설이기만 하고 결단을 내리지 못함"},
+  {word:"천고마비",meaning:"하늘은 높고 말은 살찌는 좋은 가을철"},
+  {word:"각골난망",meaning:"입은 은혜를 뼈에 새겨 잊지 않음"},
+  {word:"학수고대",meaning:"몹시 애타게 기다림"},
+  {word:"칠전팔기",meaning:"여러 번 실패해도 굽히지 않고 다시 일어섬"},
+  {word:"유유상종",meaning:"비슷한 사람끼리 서로 어울림"},
+  {word:"권선징악",meaning:"착한 일을 권하고 악한 일을 벌함"},
+  {word:"일취월장",meaning:"나날이 발전하여 크게 나아감"},
+  {word:"고군분투",meaning:"혼자서 어려운 일을 힘겹게 싸워 나감"},
+  {word:"막상막하",meaning:"실력이 비슷해 우열을 가리기 어려움"},
+  {word:"설상가상",meaning:"어려운 일이 잇따라 겹쳐 일어남"},
+  {word:"진퇴양난",meaning:"이러지도 저러지도 못하는 어려운 처지"},
+  {word:"결자해지",meaning:"일을 저지른 사람이 그 일을 해결해야 함"},
 ];
 function numOptions(ans){
   const set=new Set([ans]);let guard=0;
@@ -378,7 +500,8 @@ function saveGame(){
   if(!state.hasGame)return;
   try{
     const data={v:2,partner,captured:state.captured,balls:state.balls,
-      pos:player?{x:player.position.x,z:player.position.z}:HOME, yaw:state.yaw};
+      pos:player?{x:player.position.x,z:player.position.z}:HOME, yaw:state.yaw,
+      stats:state.stats, missions:state.missions, missionDate:state.missionDate, showcase:state.showcase};
     localStorage.setItem(SAVE_KEY,JSON.stringify(data));
   }catch(e){/* preview sandbox may block storage */}
 }
@@ -442,7 +565,21 @@ function buildWorld(){
   for(let i=0;i<26;i++)buildTree(rand(-50,50),rand(-50,50));
   for(let i=0;i<40;i++)buildTallGrass(rand(-52,52),rand(-52,52));
   buildChest(new THREE.Vector3(3,0,7));buildChest(new THREE.Vector3(-20,0,-10));buildChest(new THREE.Vector3(20,0,-16));
+  buildPond(POND.x,POND.z,12);
   const B=58;for(let x=-B;x<=B;x+=4){fencePost(x,-B);fencePost(x,B);}for(let z=-B;z<=B;z+=4){fencePost(-B,z);fencePost(B,z);}
+}
+const POND={x:32,z:26,r:16};
+function buildPond(x,z,r){
+  const p=new THREE.Mesh(new THREE.CircleGeometry(r,36),new THREE.MeshLambertMaterial({color:0x4fc3f7,transparent:true,opacity:.9}));
+  p.rotation.x=-Math.PI/2;p.position.set(x,0.06,z);scene.add(p);
+  const rim=new THREE.Mesh(new THREE.RingGeometry(r,r+1.2,36),new THREE.MeshLambertMaterial({color:0xc2b280,side:THREE.DoubleSide}));
+  rim.rotation.x=-Math.PI/2;rim.position.set(x,0.04,z);scene.add(rim);
+}
+function regionAt(x,z){
+  if(Math.hypot(x-POND.x,z-POND.z)<POND.r+2) return {name:"물가",pool:["aqua","frost","gale","puff"]};
+  if(z<-8) return {name:"도시",pool:["iron","spark","night","ember"]};
+  if(x<-14) return {name:"숲",pool:["bug","leaf","toxi","gale"]};
+  return {name:"초원",pool:["puff","bug","leaf","ember","rocky"]};
 }
 function fencePost(x,z){const p=box(.3,1.6,.3,0x8d6e63);p.position.set(x,.8,z);scene.add(p);addCollider(p);}
 function buildHouse(pos){const g=new THREE.Group();g.position.copy(pos);
@@ -476,13 +613,13 @@ function spawnBalls(n){for(let i=0;i<n;i++){const kind=randomBallKind();const g=
   let x,z,ok,tries=0;do{x=rand(-52,52);z=rand(-52,52);ok=Math.hypot(x-0,z-10)>6&&!nearCollider(x,z,1.2);tries++;}while(!ok&&tries<40);
   g.position.set(x,.45,z);scene.add(g);world.balls.push(g);}}
 function spawnMonsters(n,forceStrong){for(let i=0;i<n;i++){
+  let x,z,tries=0;do{x=rand(-50,50);z=rand(-50,50);tries++;}while((Math.hypot(x,z-10)<10||nearCollider(x,z,1.5))&&tries<40);
+  const reg=regionAt(x,z);
   let key,strong;
-  const rare=Math.random()<.06;
-  if(rare){key="drake";strong=true;}
-  else{key=pick(WILD_POOL);strong=forceStrong||Math.random()<.16;}
+  if(Math.random()<.05){key="drake";strong=true;}
+  else{key=pick(reg.pool);strong=forceStrong||Math.random()<.16;}
   const m=buildMonster(key,strong);
   m.userData.cp=rollCP(SPECIES[key].baseCP,strong);
-  let x,z,tries=0;do{x=rand(-50,50);z=rand(-50,50);tries++;}while((Math.hypot(x,z-10)<10||nearCollider(x,z,1.5))&&tries<40);
   m.position.set(x,0,z);m.userData.wander={t:rand(0,6),dir:rand(0,Math.PI*2),speed:rand(.6,1.4),moving:true};
   scene.add(m);world.monsters.push(m);}}
 
@@ -543,11 +680,11 @@ function doAction(){
   if(state.nearBall){pickBall(state.nearBall);return;}
 }
 function pickBall(g){const kind=g.userData.kind;scene.remove(g);world.balls=world.balls.filter(b=>b!==g);
-  state.balls[kind]++;updateBag();saveGame();toast(BALLS[kind].name+"을(를) 찾았다! (+1)");state.nearBall=null;}
+  state.balls[kind]++;updateBag();bumpMission("pickup");saveGame();toast(BALLS[kind].name+"을(를) 찾았다! (+1)");state.nearBall=null;}
 
 // ---------- capture ----------
 function startCapture(mon){
-  state.inCapture=true;state.capMon=mon;state.quizBonus=false;state.quizDone=false;
+  state.inCapture=true;state.capMon=mon;state.quizBonus=false;state.quizDone=false;state.misses=0;
   const key=mon.userData.species,s=SPECIES[key],strong=mon.userData.strong;
   document.getElementById("capName").textContent=`야생 ${strong?"강한 ":""}${s.name} 등장!`;
   document.getElementById("capName").style.color="#"+s.color.toString(16).padStart(6,"0");
@@ -562,9 +699,9 @@ function startCapture(mon){
   document.getElementById("capture").style.display="flex";
 }
 function buildQuizUI(cp){
-  const quiz=makeQuiz(cp);state.currentQuiz=quiz;
+  const quiz=makeQuiz(cp);state.currentQuiz=quiz;state.quizDone=false;
   const wrap=document.getElementById("capQuiz");wrap.style.display="block";
-  wrap.innerHTML=`<div class="qq">문제를 맞히면 포획 확률이 크게 올라가요! · 유형: ${quiz.level}</div>
+  wrap.innerHTML=`<div class="qq">정답을 맞혀야 몬스터를 잘 잡을 수 있어요! · 유형: ${quiz.level}</div>
     <div class="quizchar"><div class="prof">🦉</div><div class="bubble">${quiz.q}</div></div>
     <div class="qopts"></div>`;
   const optWrap=wrap.querySelector(".qopts");
@@ -575,15 +712,18 @@ function buildQuizUI(cp){
 }
 function answerQuiz(chosen,answer,btn){
   if(state.quizDone)return;state.quizDone=true;
-  state.quizBonus=(chosen===String(answer));
+  const correct=(chosen===String(answer));state.quizBonus=correct;
+  const k={"수학":"math","영어":"english","사자성어":"idiom"}[state.currentQuiz.level];
+  if(k){state.stats[k].a++;if(correct)state.stats[k].c++;}
+  if(correct)bumpMission("quiz");
   document.querySelectorAll(".qopt").forEach(b=>{b.disabled=true;
     if(b.textContent===String(answer))b.classList.add("qok");
     else if(b===btn)b.classList.add("qbad");});
   const msg=document.getElementById("capMsg");
-  if(state.quizBonus){msg.style.color="#66bb6a";msg.textContent="정답! 포획 확률 상승 🎯 볼을 던지세요.";}
-  else{msg.style.color="#ffb74d";msg.textContent=`아쉽다! 정답은 "${answer}". 기본 확률로 도전할 수 있어요.`;}
+  if(correct){msg.style.color="#66bb6a";msg.textContent="정답! 이제 볼을 던져 잡아보세요 🎯";}
+  else{msg.style.color="#ff8a65";msg.textContent=`아쉽다! 정답은 "${answer}". 이대로 던지면 거의 안 잡히고 도망갈 수 있어요.`;}
   document.getElementById("capBalls").style.display="flex";
-  renderCaptureBalls();
+  renderCaptureBalls();saveGame();
 }
 function renderCaptureBalls(){
   const wrap=document.getElementById("capBalls");wrap.innerHTML="";
@@ -598,13 +738,20 @@ function renderCaptureBalls(){
   if(!any){const p=document.createElement("div");p.textContent="던질 볼이 없어요…";p.style.opacity=.8;wrap.appendChild(p);}
 }
 function catchChance(mon,kind){
-  if(kind==="master")return 1;
-  let base=mon.userData.strong?0.30:0.70;
-  base*=(1-Math.min(0.35,mon.userData.cp/6000)); // 높은 CP일수록 잡기 어렵게
+  if(kind==="master")return 1;              // 마스터볼은 항상 확정
+  if(!state.quizBonus)return 0.08;          // 오답이면 거의 안 잡힘
+  let base=mon.userData.strong?0.35:0.75;
+  base*=(1-Math.min(0.35,mon.userData.cp/6000)); // 높은 CP일수록 어렵게
   let c=base*BALLS[kind].mult;
-  if(state.quizBonus)c+=0.30; // 퀴즈 정답 보너스
   if(partner&&SPECIES[partner].type===SPECIES[mon.userData.species].type)c+=0.10;
-  return Math.max(.05,Math.min(.95,c));
+  return Math.max(.05,Math.min(.97,c));
+}
+function fleeChance(mon){
+  let f=state.quizBonus?0.10:0.42;          // 오답이면 도망 잘 감
+  f+=0.06*state.misses;
+  f+=Math.min(0.25,mon.userData.cp/8000);
+  if(mon.userData.strong)f+=0.12;
+  return Math.min(0.85,f);
 }
 function throwBall(kind){
   if(state.balls[kind]<=0)return;
@@ -615,19 +762,29 @@ function throwBall(kind){
   let sh=0;const wob=setInterval(()=>{cm.style.transform=`rotate(${(sh%2?1:-1)*8}deg)`;sh++;},160);
   setTimeout(()=>{
     clearInterval(wob);cm.style.transform="";
-    const key=state.capMon.userData.species,cp=state.capMon.userData.cp;
-    const success=Math.random()<catchChance(state.capMon,kind);
-    if(success){msg.style.color="#66bb6a";msg.textContent=`잡았다! ${SPECIES[key].name} (CP ${cp}) 포획!`;captureSuccess(state.capMon);setTimeout(closeCapture,1600);}
-    else{msg.style.color="#ef5350";
-      if(totalBalls()>0){msg.textContent="아쉽다! 볼에서 튀어나왔다. 다시 던져보자.";renderCaptureBalls();}
-      else{msg.textContent="놓쳤다… 볼이 다 떨어졌어요.";setTimeout(closeCapture,1500);}}
+    const mon=state.capMon,key=mon.userData.species,cp=mon.userData.cp,nm=SPECIES[key].name;
+    if(Math.random()<catchChance(mon,kind)){
+      msg.style.color="#66bb6a";msg.textContent=`잡았다! ${nm} (CP ${cp}) 포획!`;captureSuccess(mon);setTimeout(closeCapture,1600);
+    }else{
+      state.misses++;
+      if(Math.random()<fleeChance(mon)){
+        msg.style.color="#ef5350";msg.textContent=`앗! ${nm}이(가) 도망쳐 버렸어요…`;fleeMon(mon);setTimeout(closeCapture,1600);
+      }else if(totalBalls()>0){
+        msg.style.color="#ffb74d";msg.textContent="안 잡혔어요! 🦉 새 문제를 풀고 다시 도전하세요.";
+        document.getElementById("capBalls").style.display="none";buildQuizUI(cp);
+      }else{
+        msg.style.color="#ef5350";msg.textContent="볼이 다 떨어졌어요…";setTimeout(closeCapture,1500);
+      }
+    }
     saveGame();
   },1400);
 }
+function fleeMon(mon){scene.remove(mon);world.monsters=world.monsters.filter(m=>m!==mon);setTimeout(()=>spawnMonsters(1),3000);}
 function captureSuccess(mon){const key=mon.userData.species,cp=mon.userData.cp;
   const e=state.captured[key]||{cps:[]};
   e.cps.push(cp);state.captured[key]=e; // 개체별 CP를 하나하나 기록
   document.getElementById("dexCount").textContent=Object.keys(state.captured).length;
+  bumpMission("catch");
   scene.remove(mon);world.monsters=world.monsters.filter(m=>m!==mon);
   saveGame();setTimeout(()=>spawnMonsters(1),3000);}
 function closeCapture(){document.getElementById("capture").style.display="none";state.inCapture=false;state.capMon=null;state.nearMon=null;}
@@ -653,7 +810,7 @@ function renderDex(){const grid=document.getElementById("dexGrid");grid.innerHTM
 function renderMine(){const grid=document.getElementById("mineGrid");grid.innerHTML="";
   const items=[];
   Object.keys(state.captured).forEach(key=>{const cps=(state.captured[key].cps)||[];
-    cps.forEach((cp,i)=>items.push({key,cp,i}));});
+    cps.forEach(cp=>items.push({key,cp}));});
   items.sort((a,b)=>b.cp-a.cp);
   document.getElementById("mineCount").textContent=items.length;
   if(!items.length){grid.innerHTML='<div class="mineEmpty">아직 잡은 몬스터가 없어요.<br>숲을 탐험하며 몬스터를 잡아보세요!</div>';return;}
@@ -703,7 +860,9 @@ function updatePlayer(dt,time){
     player.userData.arms[0].rotation.x=-sw;player.userData.arms[1].rotation.x=sw;
   }else{player.userData.legs.forEach(l=>l.rotation.x*=.8);player.userData.arms.forEach(a=>a.rotation.x*=.8);}
   let deg=(-state.yaw*180/Math.PI)%360;if(deg<0)deg+=360;
-  const dirs=["N","NE","E","SE","S","SW","W","NW"];document.getElementById("compass").textContent=dirs[Math.round(deg/45)%8];
+  const dirs=["N","NE","E","SE","S","SW","W","NW"];
+  const reg=regionAt(player.position.x,player.position.z);
+  document.getElementById("compass").textContent=reg.name+" · "+dirs[Math.round(deg/45)%8];
 }
 function updateMonster(m,dt,time){const w=m.userData.wander;if(w){w.t-=dt;
   if(w.t<=0){w.t=rand(1.5,4);w.dir=rand(0,Math.PI*2);w.moving=Math.random()<.7;}
@@ -730,6 +889,14 @@ function updateCamera(){if(!player)return;const dist=7,height=4;
 
 // ---------- menu / flow ----------
 function toggleMenu(){const m=document.getElementById("menu");m.style.display=m.style.display==="flex"?"none":"flex";}
+function askConfirm(msg,onYes){
+  document.getElementById("confirmMsg").textContent=msg;
+  const c=document.getElementById("confirm");c.style.display="flex";
+  const yes=document.getElementById("confirmYes"),no=document.getElementById("confirmNo");
+  const close=()=>{c.style.display="none";yes.onclick=null;no.onclick=null;};
+  yes.onclick=()=>{close();onYes();};
+  no.onclick=close;
+}
 function goHome(){player.position.set(HOME.x,0,HOME.z);state.yaw=0;ensureBuddy();document.getElementById("menu").style.display="none";toast("🏠 집으로 돌아왔습니다.");saveGame();}
 function goToMain(){saveGame();state.started=false;document.getElementById("menu").style.display="none";document.getElementById("hud").style.display="none";showTitle(true);}
 function showTitle(resume){
@@ -742,30 +909,170 @@ function enterGame(){
   document.getElementById("overlay").style.display="none";
   document.getElementById("hud").style.display="block";
   updateBag();document.getElementById("dexCount").textContent=Object.keys(state.captured).length;
+  const freshMissions=refreshMissions();rebuildShowcase();
   ensureBuddy();saveGame();
+  if(freshMissions)setTimeout(openMissions,700); // 그날 처음 입장 시 미션 팝업
 }
 function applySave(sv){
   partner=sv.partner||"leaf";
   const raw=sv.captured||{};const norm={};
   for(const k in raw){const v=raw[k];
-    if(typeof v==="number"){norm[k]={cps:Array(Math.max(0,v)).fill(0)};} // 아주 옛 저장(수량만)
-    else if(v&&Array.isArray(v.cps)){norm[k]={cps:v.cps.slice()};}       // 신규 형식(개체별 CP)
-    else{const cnt=(v&&v.count)||0,best=(v&&v.best)||0;const cps=[];       // 이전 형식(수량+최고CP)
+    if(typeof v==="number"){norm[k]={cps:Array(Math.max(0,v)).fill(0)};}   // 아주 옛 저장(수량만)
+    else if(v&&Array.isArray(v.cps)){norm[k]={cps:v.cps.slice()};}          // 신규 형식(개체별 CP)
+    else{const cnt=(v&&v.count)||0,best=(v&&v.best)||0;const cps=[];          // 이전 형식(수량+최고CP)
       for(let i=0;i<cnt;i++)cps.push(i===0?best:0);norm[k]={cps};}
   }
   state.captured=norm;
   state.balls=Object.assign({normal:0,super:0,hyper:0,master:0},sv.balls||{});
   state.yaw=sv.yaw||0;
   if(sv.pos)player.position.set(sv.pos.x,0,sv.pos.z);
+  state.stats=Object.assign({math:{a:0,c:0},english:{a:0,c:0},idiom:{a:0,c:0}},sv.stats||{});
+  state.missions=Array.isArray(sv.missions)?sv.missions:[];
+  state.missionDate=sv.missionDate||"";
+  state.showcase=(Array.isArray(sv.showcase)?sv.showcase:[])
+    .map(e=>typeof e==="string"?{key:e,spot:"yard"}:e)
+    .filter(e=>e&&SPECIES[e.key]);
 }
 function newGame(){
   clearSave();
   state.captured={};state.balls={normal:3,super:0,hyper:0,master:0};
   state.yaw=0;player.position.set(0,0,-2);
+  state.stats={math:{a:0,c:0},english:{a:0,c:0},idiom:{a:0,c:0}};
+  state.missions=[];state.missionDate="";state.showcase=[];
   enterGame();
   const s=SPECIES[partner];
   setTimeout(()=>toast(`${s.name}와(과) 함께 모험을 시작합니다! (몬스터볼 3개 지급)`),300);
   setTimeout(()=>toast("풀숲과 건물 주변에 숨겨진 볼을 찾아보세요."),2900);
+}
+
+// ---------- daily missions ----------
+const MISSION_POOL=[
+  {type:"catch",goal:3,desc:"몬스터 3마리 잡기",reward:{super:2}},
+  {type:"catch",goal:5,desc:"몬스터 5마리 잡기",reward:{hyper:1}},
+  {type:"quiz",goal:5,desc:"🦉 퀴즈 5문제 맞히기",reward:{super:2}},
+  {type:"quiz",goal:8,desc:"🦉 퀴즈 8문제 맞히기",reward:{hyper:1}},
+  {type:"pickup",goal:5,desc:"몬스터볼 5개 줍기",reward:{normal:3}},
+  {type:"pickup",goal:8,desc:"몬스터볼 8개 줍기",reward:{super:1}},
+];
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function refreshMissions(){
+  const today=todayStr();
+  if(state.missionDate===today && state.missions.length) return false;
+  state.missionDate=today;
+  state.missions=shuffle([...MISSION_POOL]).slice(0,3).map(m=>({type:m.type,goal:m.goal,desc:m.desc,reward:m.reward,cur:0,claimed:false}));
+  saveGame();return true;
+}
+function bumpMission(type,n=1){
+  let changed=false;
+  state.missions.forEach(m=>{if(m.type===type&&!m.claimed&&m.cur<m.goal){m.cur=Math.min(m.goal,m.cur+n);changed=true;}});
+  if(changed){saveGame();if(document.getElementById("panel").style.display==="flex"&&document.getElementById("panelTitle").textContent.includes("미션"))openMissions();}
+}
+function openMissions(){
+  refreshMissions();
+  document.getElementById("menu").style.display="none";
+  document.getElementById("panelTitle").textContent="📋 오늘의 미션";
+  document.getElementById("panelSub").textContent="하루마다 새로워져요. 목표를 채우고 보상을 받으세요!";
+  const body=document.getElementById("panelBody");body.innerHTML="";
+  state.missions.forEach((m,i)=>{
+    const pct=Math.min(100,Math.round(m.cur/m.goal*100));
+    const rew=Object.entries(m.reward).map(([k,v])=>`${BALLS[k].name}×${v}`).join(", ");
+    const done=m.cur>=m.goal;
+    const row=document.createElement("div");row.className="mrow";
+    row.innerHTML=`<div class="mtop"><span class="mdesc">${m.desc}</span>${
+      m.claimed?'<span class="mdone">완료 ✓</span>':(done?`<button class="pxbtn mclaim" data-i="${i}">🎁 보상 받기</button>`:'')}</div>
+      <div class="mbar"><span style="width:${pct}%"></span></div>
+      <div class="mprog">${m.cur} / ${m.goal} · 보상: ${rew}</div>`;
+    body.appendChild(row);
+  });
+  body.querySelectorAll(".mclaim").forEach(b=>b.addEventListener("click",()=>claimMission(+b.dataset.i)));
+  document.getElementById("panel").style.display="flex";
+}
+function claimMission(i){
+  const m=state.missions[i];if(!m||m.claimed||m.cur<m.goal)return;
+  for(const k in m.reward)state.balls[k]=(state.balls[k]||0)+m.reward[k];
+  m.claimed=true;updateBag();saveGame();toast("미션 보상 획득! 🎁");openMissions();
+}
+
+// ---------- quiz stats ----------
+function openStats(){
+  document.getElementById("menu").style.display="none";
+  document.getElementById("panelTitle").textContent="📊 퀴즈 통계";
+  document.getElementById("panelSub").textContent="유형별 정답 기록이에요. 꾸준히 맞혀 정답률을 올려봐요!";
+  const body=document.getElementById("panelBody");body.innerHTML="";
+  const names={math:"수학",english:"영어",idiom:"사자성어"};let ta=0,tc=0;
+  Object.keys(names).forEach(k=>{
+    const s=state.stats[k];const pct=s.a?Math.round(s.c/s.a*100):0;ta+=s.a;tc+=s.c;
+    const row=document.createElement("div");
+    row.innerHTML=`<div class="statrow"><span>${names[k]}</span><span><b>${s.c}</b> / ${s.a} · ${pct}%</span></div>
+      <div class="statbar" style="margin:-4px 0 10px"><span style="width:${pct}%"></span></div>`;
+    body.appendChild(row);
+  });
+  const tp=ta?Math.round(tc/ta*100):0;
+  const tot=document.createElement("div");tot.className="statrow";
+  tot.innerHTML=`<span>전체</span><span><b>${tc}</b> / ${ta} · ${tp}%</span>`;body.appendChild(tot);
+  document.getElementById("panel").style.display="flex";
+}
+
+// ---------- house decoration ----------
+let showcaseModels=[];
+const SPOTS=["none","yard","wall","roof"];
+const SPOT_LABEL={none:"미전시",yard:"🌳 마당",wall:"🖼️ 액자",roof:"🏠 옥상"};
+const SPOT_CAP={yard:6,wall:4,roof:5};
+function spotOf(k){const e=state.showcase.find(x=>x.key===k);return e?e.spot:"none";}
+function buildPortrait(k){
+  const s=SPECIES[k];const g=new THREE.Group();
+  const frame=box(1.1,1.3,.14,0x6d4c41);g.add(frame);
+  const inner=box(.86,1.06,.12,s.color);inner.position.z=-.05;g.add(inner);
+  const face=box(.42,.42,.14,s.accent);face.position.set(0,.16,-.10);g.add(face);
+  const eyeMat=new THREE.MeshBasicMaterial({color:0x111111});
+  [-0.1,0.1].forEach(x=>{const e=new THREE.Mesh(new THREE.BoxGeometry(.06,.07,.05),eyeMat);e.position.set(x,.18,-.17);g.add(e);});
+  const hook=box(.05,.25,.05,0x3e2723);hook.position.set(0,.75,-.02);g.add(hook);
+  return g;
+}
+function rebuildShowcase(){
+  showcaseModels.forEach(m=>scene.remove(m));showcaseModels=[];
+  const yard=[],wall=[],roof=[];
+  state.showcase.forEach(e=>{if(!SPECIES[e.key])return;(e.spot==="wall"?wall:e.spot==="roof"?roof:yard).push(e.key);});
+  yard.forEach((k,i)=>{const m=buildMonster(k,false);m.scale.set(.6,.6,.6);const c=i%3,r=Math.floor(i/3);m.position.set(-4+c*4,0,5-r*2.4);m.rotation.y=Math.PI;scene.add(m);showcaseModels.push(m);});
+  wall.forEach((k,i)=>{const f=buildPortrait(k);f.position.set(-2.1+i*1.4,1.9,6.98);scene.add(f);showcaseModels.push(f);}); // 집 앞벽에 액자
+  roof.forEach((k,i)=>{const m=buildMonster(k,false);m.scale.set(.5,.5,.5);m.position.set(-2+i*2,4.4,10);m.rotation.y=Math.PI;scene.add(m);showcaseModels.push(m);}); // 옥상 위
+}
+function cycleSpot(k){
+  const cur=spotOf(k);let next=SPOTS[(SPOTS.indexOf(cur)+1)%SPOTS.length];
+  // skip full spots
+  let guard=0;
+  while(next!=="none"&&countSpot(next)>=SPOT_CAP[next]&&next!==cur&&guard<4){next=SPOTS[(SPOTS.indexOf(next)+1)%SPOTS.length];guard++;}
+  state.showcase=state.showcase.filter(x=>x.key!==k);
+  if(next!=="none")state.showcase.push({key:k,spot:next});
+  rebuildShowcase();saveGame();
+  if(next!=="none"&&countSpot(next)>SPOT_CAP[next]){} // safety no-op
+}
+function countSpot(spot){return state.showcase.filter(x=>x.spot===spot).length;}
+function openDecor(){
+  document.getElementById("menu").style.display="none";
+  document.getElementById("panelTitle").textContent="🏡 집 꾸미기";
+  document.getElementById("panelSub").textContent="잡은 몬스터를 마당·액자·옥상에 배치하거나 파트너로 정할 수 있어요. (배치 버튼을 누르면 위치가 바뀌어요)";
+  const body=document.getElementById("panelBody");body.innerHTML="";
+  const keys=Object.keys(state.captured);
+  if(!keys.length){body.innerHTML='<div style="opacity:.85">아직 잡은 몬스터가 없어요. 먼저 몬스터를 잡아보세요!</div>';document.getElementById("panel").style.display="flex";return;}
+  const cap=document.createElement("div");cap.className="mprog";cap.style.marginBottom="10px";
+  cap.textContent=`마당 ${countSpot("yard")}/${SPOT_CAP.yard} · 액자 ${countSpot("wall")}/${SPOT_CAP.wall} · 옥상 ${countSpot("roof")}/${SPOT_CAP.roof}`;
+  body.appendChild(cap);
+  const grid=document.createElement("div");grid.className="decorgrid";
+  keys.forEach(k=>{
+    const s=SPECIES[k];const spot=spotOf(k);const isBuddy=partner===k;
+    const cell=document.createElement("div");cell.className="decorcell";
+    cell.innerHTML=`<div class="em">${s.emoji}</div><div class="nm">${s.name}</div>
+      <div class="btns">
+        <button class="pxbtn mini ${spot!=='none'?'on':''}" data-spot="${k}">${SPOT_LABEL[spot]}</button>
+        <button class="pxbtn mini ${isBuddy?'buddy':''}" data-buddy="${k}">${isBuddy?'현재 파트너':'파트너로'}</button>
+      </div>`;
+    grid.appendChild(cell);
+  });
+  body.appendChild(grid);
+  grid.querySelectorAll("[data-spot]").forEach(b=>b.addEventListener("click",()=>{cycleSpot(b.dataset.spot);openDecor();}));
+  grid.querySelectorAll("[data-buddy]").forEach(b=>b.addEventListener("click",()=>{partner=b.dataset.buddy;ensureBuddy();saveGame();toast(SPECIES[partner].name+"을(를) 파트너로 정했어요!");openDecor();}));
+  document.getElementById("panel").style.display="flex";
 }
 
 // ---------- boot ----------
@@ -784,7 +1091,7 @@ function init(){
 }
 function buildPartnerCards(){const wrap=document.getElementById("partners");
   ["leaf","ember","aqua"].forEach(key=>{const s=SPECIES[key];const c=document.createElement("div");c.className="pcard";c.dataset.key=key;
-    c.innerHTML=`<div class="art" style="background:#${s.color.toString(16).padStart(6,"0")}22"><div class="emj">${s.emoji}</div></div>
+    c.innerHTML=`<div class="art" style="background:#${s.color.toString(16).padStart(6,"0")}22"><div style="font-size:72px">${s.emoji}</div></div>
       <div class="pname">${s.name}</div><span class="ptype ${s.tclass}">${s.type}타입</span><div class="pdesc">${s.desc}</div>`;
     c.addEventListener("click",()=>{document.querySelectorAll(".pcard").forEach(x=>x.classList.remove("sel"));c.classList.add("sel");partner=key;document.getElementById("startBtn").classList.add("ready");});
     wrap.appendChild(c);});}
@@ -798,25 +1105,25 @@ window.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("startBtn").addEventListener("click",()=>{if(partner)newGame();});
   document.getElementById("resumeBtn").addEventListener("click",()=>{const s=loadSave();if(s){applySave(s);}enterGame();});
   document.getElementById("newBtn").addEventListener("click",()=>{
-    // native confirm()이 일부 모바일 브라우저에서 무시되어 무반응처럼 보이던 문제 →
-    // 파트너 선택 화면으로 바로 이동(저장은 '모험 시작' 시 newGame()에서 초기화되므로 안전).
-    partner=null;document.querySelectorAll(".pcard").forEach(x=>x.classList.remove("sel"));
-    document.getElementById("startBtn").classList.remove("ready");
-    showTitle(false);
-    document.getElementById("backToResume").style.display="inline-block";
-  });
-  document.getElementById("backToResume").addEventListener("click",()=>{
-    document.getElementById("backToResume").style.display="none";
-    showTitle(true);
+    askConfirm("저장된 모험을 지우고 처음부터 시작할까요?",()=>{
+      clearSave();partner=null;document.querySelectorAll(".pcard").forEach(x=>x.classList.remove("sel"));
+      document.getElementById("startBtn").classList.remove("ready");showTitle(false);
+    });
   });
 
   document.getElementById("menuBtn").addEventListener("click",toggleMenu);
+  document.getElementById("missionQuick").addEventListener("click",openMissions);
+  document.getElementById("dexQuick").addEventListener("click",()=>{renderDex();document.getElementById("dex").style.display="flex";});
   document.getElementById("mResume").addEventListener("click",toggleMenu);
-  document.getElementById("mMine").addEventListener("click",()=>{document.getElementById("menu").style.display="none";renderMine();document.getElementById("mine").style.display="flex";});
+  document.getElementById("mMission").addEventListener("click",openMissions);
+  document.getElementById("mStats").addEventListener("click",openStats);
   document.getElementById("mDex").addEventListener("click",()=>{document.getElementById("menu").style.display="none";renderDex();document.getElementById("dex").style.display="flex";});
+  document.getElementById("mMine").addEventListener("click",()=>{document.getElementById("menu").style.display="none";renderMine();document.getElementById("mine").style.display="flex";});
+  document.getElementById("mDecor").addEventListener("click",openDecor);
   document.getElementById("mHome").addEventListener("click",goHome);
   document.getElementById("mExit").addEventListener("click",goToMain);
   document.getElementById("mHelp").addEventListener("click",()=>{document.getElementById("menu").style.display="none";toast(state.isMobile?"조이스틱=이동 · 오른쪽 화면=시점 · 행동버튼=줍기/포획":"WASD=이동 · 마우스드래그=시점 · E/클릭=줍기/포획");});
+  document.getElementById("panelClose").addEventListener("click",()=>document.getElementById("panel").style.display="none");
 
   document.getElementById("capRun").addEventListener("click",closeCapture);
   document.getElementById("dexClose").addEventListener("click",()=>document.getElementById("dex").style.display="none");

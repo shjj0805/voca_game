@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Honey의 Sprout 단어게임</title>
+<title>Sprout 단어게임</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="단어배틀">
@@ -316,8 +316,8 @@ function renderHome(){
   const battleLocked = sel!=='all' && !threeDone;
   const battleDone = q && q.battle;
   app.innerHTML = `
-    <div class="topbar"><div class="logo">🌱 Honey의 Sprout 단어게임 <small>Sprout1 B1</small></div></div>
-    <div style="margin:-4px 0 10px"><a href="index.html" style="display:inline-block;background:rgba(255,255,255,.9);border-radius:12px;padding:8px 14px;font-weight:800;font-size:13px;color:#0d3a2a;text-decoration:none">📖 이번 달 단어(B2) →</a></div>
+    <div class="topbar"><div class="logo">🌱 Sprout 단어게임 <small>Sprout1 B1</small></div></div>
+    <div style="margin:-4px 0 12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:12px;font-weight:800;color:#0d3a2a;opacity:.85;margin-right:2px">📚 단어장</span><span style="display:inline-block;border-radius:11px;padding:7px 14px;font-weight:800;font-size:13px;background:#16a667;color:#fff;box-shadow:0 3px 10px rgba(22,166,103,.4)">B1</span><a href="b2.html" style="display:inline-block;border-radius:11px;padding:7px 14px;font-weight:800;font-size:13px;text-decoration:none;background:rgba(255,255,255,.9);color:#0d3a2a">B2</a><a href="index.html" style="display:inline-block;border-radius:11px;padding:7px 14px;font-weight:800;font-size:13px;text-decoration:none;background:rgba(255,255,255,.9);color:#0d3a2a">B3</a></div>
     <div class="card-panel">
       <div class="passrow"><span>${S.category==='vocab'?'📘 단어':'🔗 청크'} · 통과한 레슨</span><b>${passCount} / ${lessons.length}</b></div>
       <div class="label">레슨 선택</div>

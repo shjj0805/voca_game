@@ -685,24 +685,27 @@ function renderType(){
   replay=renderType;
   const pool=itemsFor(S.lesson); const items=shuffle(pool).slice(0,S.lesson==='all'?20:pool.length);
   const total=items.length;
+  const HINT_MAX = S.category==='chunk' ? 3 : 2;   // 힌트: 단어 2회, 청크 3회
+  let hintLeft = HINT_MAX;
   let queue=items.slice(), i=0, phase='main', wrong=[], firstScore=0, combo=0, answered=false;
   const norm=s=>(s||'').toLowerCase().replace(/[.?!,]+$/,'').replace(/\s+/g,' ').trim();
   const masked=ans=>ans.split(' ').map(w=>w[0]+(w.length>1?'_'.repeat(w.length-1):'')).join('  ');
   function retryIntro(){
     phase='retry'; queue=shuffle(wrong.slice()); i=0;
     app.innerHTML = `
-      ${hud('써보기 ⌨️','🔁 재도전')}
-      <div class="qcard"><div style="font-size:48px">🔁</div>
-        <div class="qword" style="font-size:22px;margin-top:6px">아쉽게 틀린 단어 ${queue.length}개!</div>
-        <div class="qtag" style="margin-top:10px;font-size:13px">한 번 더 기회를 줄게요. 이번에 다 맞히면 통과예요!</div></div>
-      <button class="startbtn" id="retryGo">다시 도전 🔁</button>`;
+      ${hud('써보기 ⌨️','⚡ One More Chance')}
+      <div class="qcard"><div style="font-size:46px">⚡</div>
+        <div class="qword" style="font-size:27px;margin-top:6px;color:#1476b8;letter-spacing:.3px">One More Chance!</div>
+        <div class="qword" style="font-size:17px;margin-top:8px">틀린 ${queue.length}개, 딱 한 번 더 기회를 줄게요</div>
+        <div class="qtag" style="margin-top:10px;font-size:13px">이번에 다 맞히면 써보기 통과예요! ✅</div></div>
+      <button class="startbtn" id="retryGo">한 번 더 도전 ✍️</button>`;
     bindBack();
     document.getElementById('retryGo').onclick=()=>{ beep(true); draw(); };
   }
   function draw(){
     const it=queue[i], c=qa(it); answered=false;
-    const counter = phase==='main' ? ((i+1)+' / '+total) : ('🔁 '+(i+1)+' / '+queue.length);
-    const tag = phase==='main' ? (S.category==='vocab'?'뜻을 보고 영어 단어를 쓰세요 ✍️':'뜻을 보고 영어 청크를 쓰세요 ✍️') : '🔁 틀린 단어 다시! 영어로 써보세요';
+    const counter = phase==='main' ? ((i+1)+' / '+total) : ('⚡ '+(i+1)+' / '+queue.length);
+    const tag = phase==='main' ? (S.category==='vocab'?'뜻을 보고 영어 단어를 쓰세요 ✍️':'뜻을 보고 영어 청크를 쓰세요 ✍️') : '⚡ One More Chance! 틀린 것만 다시';
     app.innerHTML = `
       ${hud('써보기 ⌨️', counter)}
       <div class="progress"><div style="width:${(i/queue.length)*100}%"></div></div>
@@ -712,10 +715,17 @@ function renderType(){
         <div id="hintLine" style="margin-top:14px;font-size:18px;letter-spacing:2px;color:#9bb6cf;font-weight:800;display:none">${masked(c.q)}</div></div>
       <input id="typeIn" class="type-in" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" placeholder="여기에 영어로 입력">
       <div id="feedback" class="type-fb"></div>
-      <div class="flash-ctrl"><button class="fbtn dunno" id="hintBtn">힌트 💡</button><button class="fbtn know" id="checkBtn">확인 ✓</button></div>`;
+      <div class="flash-ctrl"><button class="fbtn dunno" id="hintBtn" ${hintLeft<=0?'disabled':''}>힌트 💡 (${hintLeft})</button><button class="fbtn know" id="checkBtn">확인 ✓</button></div>`;
     bindBack();
     const input=document.getElementById('typeIn'); setTimeout(()=>{ try{input.focus();}catch(e){} },50);
-    document.getElementById('hintBtn').onclick=()=>{ document.getElementById('hintLine').style.display='block'; };
+    const hintBtn=document.getElementById('hintBtn');
+    hintBtn.onclick=()=>{
+      if(hintLeft<=0 || answered) return;
+      document.getElementById('hintLine').style.display='block';
+      hintLeft--;
+      hintBtn.textContent='힌트 💡 ('+hintLeft+')';
+      if(hintLeft<=0) hintBtn.disabled=true;
+    };
     const advance=()=>{ i++; if(i>=queue.length){ if(phase==='main'&&wrong.length>0) retryIntro(); else fin(); } else draw(); };
     const check=(ev)=>{
       if(answered){ advance(); return; }
@@ -724,22 +734,21 @@ function renderType(){
       if(ok){ beep(true); if(ev) popEmoji(ev.clientX||200,ev.clientY||300,'🎯'); fb.innerHTML='🎉 정답!'; fb.className='type-fb good';
         if(phase==='main'){ firstScore++; combo++; } else { const idx=wrong.indexOf(it); if(idx>=0) wrong.splice(idx,1); } }
       else { beep(false); combo=0; fb.innerHTML='정답: <b>'+c.q+'</b>'; fb.className='type-fb bad'; if(phase==='main') wrong.push(it); }
-      input.disabled=true; document.getElementById('hintBtn').disabled=true;
+      input.disabled=true; hintBtn.disabled=true;
       const last=i>=queue.length-1;
-      document.getElementById('checkBtn').textContent = last ? (phase==='main'&&wrong.length>0?'재도전 ▶':'결과 보기') : '다음 ▶';
+      document.getElementById('checkBtn').textContent = last ? (phase==='main'&&wrong.length>0?'One More Chance ▶':'결과 보기') : '다음 ▶';
     };
     document.getElementById('checkBtn').onclick=check;
     input.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); check(); } });
   }
   async function fin(){
     const finalWrong=wrong.length; const perfect=finalWrong===0; const score=total-finalWrong; let qi=null;
-    if(S.lesson!=='all'){ if(perfect){ const r=await markQuest(S.lesson,S.category,'type'); qi={quest:'써보기',ok:true,pass:r.newlyPassed}; } else qi={quest:'써보기',ok:false,note:'틀린 단어를 재도전에서도 다 맞히면 통과돼요'}; }
+    if(S.lesson!=='all'){ if(perfect){ const r=await markQuest(S.lesson,S.category,'type'); qi={quest:'써보기',ok:true,pass:r.newlyPassed}; } else qi={quest:'써보기',ok:false,note:'One More Chance에서 틀린 단어를 다 맞히면 통과돼요'}; }
     const emoji = perfect ? (firstScore===total?'🏆':'🎉') : '💪';
-    renderResult({score,total,mode:'type',emoji,noBest:true,questInfo:qi,custom:(perfect&&firstScore<total)?'🔁 재도전으로 통과!':''});
+    renderResult({score,total,mode:'type',emoji,noBest:true,questInfo:qi,custom:(perfect&&firstScore<total)?'⚡ One More Chance로 통과!':''});
   }
   draw();
 }
-
 function renderCWStudy(){
   replay=renderCWStudy;
   const items=cwriteFor(S.lesson);

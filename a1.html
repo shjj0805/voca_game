@@ -8,17 +8,30 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="단어배틀">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#8a6fda">
+<meta name="theme-color" content="#0a0620">
 <style>
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0; }
   html,body { height:100%; }
   body { font-family:-apple-system,"Apple SD Gothic Neo","Segoe UI",system-ui,sans-serif;
-    background:linear-gradient(160deg,#c6b6f2 0%,#8a6fda 45%,#453392 100%); color:#281e56; min-height:100%; overflow-x:hidden; }
+    background-color:#05030f;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20px 30px,#fff,transparent),
+      radial-gradient(1px 1px at 90px 80px,#cfe3ff,transparent),
+      radial-gradient(2px 2px at 150px 20px,#fff6d6,transparent),
+      radial-gradient(1px 1px at 60px 140px,#fff,transparent),
+      radial-gradient(1.5px 1.5px at 180px 120px,#ffd9f5,transparent),
+      radial-gradient(ellipse 70% 45% at 15% 15%,rgba(150,70,255,.55),transparent 70%),
+      radial-gradient(ellipse 60% 40% at 90% 35%,rgba(40,110,255,.45),transparent 70%),
+      radial-gradient(ellipse 70% 40% at 30% 85%,rgba(255,60,160,.35),transparent 70%),
+      radial-gradient(ellipse 120% 18% at 50% 55%,rgba(255,255,255,.10),transparent 70%),
+      linear-gradient(180deg,#0a0620 0%,#150a3a 50%,#05030f 100%);
+    background-size:200px 200px,200px 200px,200px 200px,200px 200px,200px 200px,auto,auto,auto,auto,auto;
+    background-attachment:fixed; color:#281e56; min-height:100%; overflow-x:hidden; }
   #app { max-width:520px; margin:0 auto; padding:14px 14px 40px; min-height:100vh; }
   .topbar { display:flex; align-items:center; margin-bottom:10px; }
-  .logo { font-size:22px; font-weight:800; color:#241a52; letter-spacing:-.5px; }
+  .logo { font-size:22px; font-weight:800; color:#fff; text-shadow:0 0 12px rgba(150,120,255,.8); letter-spacing:-.5px; }
   .levelbtn { margin-left:auto; background:rgba(255,255,255,.9); color:#241a52; text-decoration:none; font-weight:800; font-size:13px; padding:8px 12px; border-radius:12px; }
-  .logo small { font-size:13px; font-weight:600; color:#352a7a; opacity:.85; }
+  .logo small { font-size:13px; font-weight:600; color:#cdbfff; opacity:.95; text-shadow:none; }
   .card-panel { background:rgba(255,255,255,.95); border-radius:22px; padding:16px; box-shadow:0 10px 30px rgba(35,22,66,.18); }
   h2 { font-size:16px; color:#241a52; margin-bottom:10px; }
   .label { font-size:13px; font-weight:700; color:#5a44aa; margin:14px 0 8px; }
@@ -102,7 +115,7 @@
   .opt.correct { background:#6247c8; border-color:#6247c8; color:#fff; }
   .opt.wrong { background:#ef5b5b; border-color:#ef5b5b; color:#fff; }
   .opt.dim { opacity:.5; }
-  .combo { text-align:center; font-weight:800; color:#352a7a; margin-bottom:8px; min-height:20px; }
+  .combo { text-align:center; font-weight:800; color:#ffe9a8; margin-bottom:8px; min-height:20px; }
   .type-in { width:100%; border:3px solid #dacef4; border-radius:16px; padding:16px; font-size:20px; font-weight:700; text-align:center; outline:none; margin:6px 0 10px; }
   .type-in:focus { border-color:#7c5fe0; } .type-in:disabled { background:#f5f1fd; }
   .type-fb { text-align:center; font-weight:800; font-size:18px; min-height:26px; margin-bottom:8px; }
@@ -485,7 +498,7 @@ function renderHome(){
   const battleLocked = sel!=='all' && !threeDone;
   const battleDone = q && q.battle;
   app.innerHTML = `
-    <div class="topbar"><div class="logo">🌱 Sprout 단어게임 <small>Sprout2 A1</small></div><a class="levelbtn" href="main.html">A2 이동 ▶</a></div>
+    <div class="topbar"><div class="logo">🌱 Sprout 단어게임 <small>Sprout2 A1</small></div><a class="levelbtn" href="index.html">A2 이동 ▶</a></div>
     <div class="card-panel">
       <div class="passrow"><span>${S.category==='vocab'?'📘 단어':S.category==='cwrite'?'✍️ 청크 라이팅':'🔗 청크'} · ${S.category==='cwrite'?'문장 학습':'통과한 레슨'}</span><b>${S.category==='cwrite'?cwriteFor('all').length+'문장':passCount+' / '+lessons.length}</b></div>
       <div class="label">레슨 선택</div>

@@ -30,7 +30,9 @@
   #app { max-width:520px; margin:0 auto; padding:14px 14px 40px; min-height:100vh; }
   .topbar { display:flex; align-items:center; margin-bottom:10px; }
   .logo { font-size:22px; font-weight:800; color:#fff; text-shadow:0 0 12px rgba(150,120,255,.8); letter-spacing:-.5px; }
-  .levelbtn { margin-left:auto; background:rgba(255,255,255,.9); color:#241a52; text-decoration:none; font-weight:800; font-size:13px; padding:8px 12px; border-radius:12px; }
+  .levelnav { display:flex; gap:8px; margin:0 0 12px; }
+  .levelnav a { background:rgba(255,255,255,.18); color:#fff; text-decoration:none; font-weight:800; font-size:13px; padding:7px 16px; border-radius:12px; border:1px solid rgba(255,255,255,.35); }
+  .levelnav a.cur { background:#fff; color:#241a52; border-color:#fff; pointer-events:none; }
   .logo small { font-size:13px; font-weight:600; color:#cdbfff; opacity:.95; text-shadow:none; }
   .card-panel { background:rgba(255,255,255,.95); border-radius:22px; padding:16px; box-shadow:0 10px 30px rgba(35,22,66,.18); }
   h2 { font-size:16px; color:#241a52; margin-bottom:10px; }
@@ -498,7 +500,8 @@ function renderHome(){
   const battleLocked = sel!=='all' && !threeDone;
   const battleDone = q && q.battle;
   app.innerHTML = `
-    <div class="topbar"><div class="logo">🌱 Sprout 단어게임 <small>Sprout2 A1</small></div><a class="levelbtn" href="index.html">A2 이동 ▶</a></div>
+    <div class="topbar"><div class="logo">🌱 Sprout 단어게임 <small>Sprout2 A1</small></div></div>
+    <div class="levelnav"><a href="a1.html" class="cur">A1</a><a href="a2.html">A2</a><a href="index.html">A3</a></div>
     <div class="card-panel">
       <div class="passrow"><span>${S.category==='vocab'?'📘 단어':S.category==='cwrite'?'✍️ 청크 라이팅':'🔗 청크'} · ${S.category==='cwrite'?'문장 학습':'통과한 레슨'}</span><b>${S.category==='cwrite'?cwriteFor('all').length+'문장':passCount+' / '+lessons.length}</b></div>
       <div class="label">레슨 선택</div>
